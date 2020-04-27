@@ -8,11 +8,11 @@ LANG.NameEnglish = "russian"
 LANG.Help = [[	Улучшенный классический Prop Hunt режим.
 Чтобы увидеть Помощь, Кликните по 'Prop Hunt Menu'!
 
-	Версия: %u  Ревизия: %s
+	Версия: %s
 		Что нового:
-		- Поддержка многих языков (WIP)
-		- Больше настроек в меню PHE
-		- Больше оптимизации
+		- Улучшена балансировка команд
+		- Кнопка, чтобы отцепить себя
+		- Настраиваемая насмешка
 		- И больше!
 	]]
 
@@ -197,14 +197,12 @@ LANG.PHEMENU.MAPVOTE.STOP = "Остановить голосование"
 LANG.PHEMENU.ABOUT = {}
 
 LANG.PHEMENU.ABOUT.CURRENTVER = "Текущая версия: "
-LANG.PHEMENU.ABOUT.CURRENTREV = "Текущая ревизия: "
 LANG.PHEMENU.ABOUT.ENJOYING = "Если вам нравится играть, то задонатьте!"
 LANG.PHEMENU.ABOUT.LINKS = "Ссылки и авторство"
 LANG.PHEMENU.ABOUT.THANKS = "Отдельное спасибо: "
 LANG.PHEMENU.ABOUT.TAB = "Об PHE"
-LANG.PHEMENU.ABOUT.DONATE = "Задонатить проекту PH:E"
+LANG.PHEMENU.ABOUT.DONATE = "Пожертвовать Wolvindra"
 LANG.PHEMENU.ABOUT.HOME = "Официальная станичка PH:E"
-LANG.PHEMENU.ABOUT.GITHUB = "GitHub Repository"
 
 -- Saving
 PHE.LANGUAGES[LANG.Code] = LANG

@@ -58,3 +58,31 @@ net.Receive("SendTauntStateCmd", function(len, ply)
 		printVerbose("[ADMIN CVAR NOTIFY] An user " .. ply:Nick() .. "(" ..  ply:SteamID() .. ") is attempting to access " .. cmdval .. ", kicked!")
 	end
 end)
+
+
+net.Receive("ResetRotateTeams", function(len, ply)
+	if ply:IsAdmin() or table.HasValue(PHE.SVAdmins, ply:GetUserGroup()) then
+		SetGlobalInt("RotateTeamsOffset", 0)
+	else
+		ply:ChatPrint(PHE.LANG.ERROR_ADMIN_ONLY)
+	end
+end)
+
+net.Receive("ForceHunterAsProp", function(len, ply)
+	if ply:IsAdmin() or table.HasValue(PHE.SVAdmins, ply:GetUserGroup()) then
+		local hunter = Player(net.ReadUInt(16))
+		local hunterName = hunter:GetName()
+
+		if !hunter:GetVar("ForceAsProp", false) then
+			hunter:SetVar("ForceAsProp", true)
+
+			for _, plyr in ipairs(player.GetAll()) do
+				plyr:ChatPrint("[ADMIN] " .. hunterName .. PHE.LANG.FORCEHUNTERASPROP.WILL_BE)
+			end
+		else
+			ply:ChatPrint(hunterName .. PHE.LANG.FORCEHUNTERASPROP.ALREADY)
+		end
+	else
+		ply:ChatPrint(PHE.LANG.ERROR_ADMIN_ONLY)
+	end
+end)

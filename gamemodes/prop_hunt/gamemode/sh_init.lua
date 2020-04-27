@@ -48,25 +48,19 @@ else
 	include("mapvote/cl_mapvote.lua")
 end
 
--- Updates!
-AddCSLuaFile("sh_httpupdates.lua")
-include("sh_httpupdates.lua")
-
 -- Fretta!
-DeriveGamemode("fretta")
+DeriveGamemode("fretta13")
 IncludePlayerClasses()
 
 -- Information about the gamemode
-GM.Name		= "Prop Hunt: ENHANCED"
-GM.Author	= "Wolvindra-Vinzuerio, D4UNKN0WNM4N2010, Fafy, Dralga & Zero"
+GM.Name		= "Prop Hunt: ENHANCED PLUS"
+GM.Author	= "Wolvindra-Vinzuerio, D4UNKN0WNM4N2010, Fafy, Dralga & Zero, KO-pKAs3tnj5sU8e85yuXA"
 
-GM._VERSION = "16"
-GM.REVISION	= "A"
+GM._VERSION = "2020-04-07.1 (cfdc582)"
 GM.DONATEURL = "https://prophunt.wolvindra.net/?go=donate"
-GM.UPDATEURL = ""
 
 -- Format PHE.LANG.Help
-PHE.LANG.Help = string.format(PHE.LANG.Help, GM._VERSION, GM.REVISION)
+PHE.LANG.Help = string.format(PHE.LANG.Help, GM._VERSION)
 
 -- Fretta configuration
 GM.GameLength				= GetConVar("ph_game_time"):GetInt()
@@ -86,6 +80,12 @@ GM.SuicideString			= "was dead or died mysteriously." -- i think this one is pre
 GM.TeamBased 				= true
 GM.AutomaticTeamBalance 	= false
 GM.ForceJoinBalancedTeams 	= true
+
+GM.RotateTeams				= false
+GM.HunterCount				= 0
+GM.OriginalTeamBalance		= false
+GM.PreventConsecutiveHunting = true
+
 
 -- Called on gamemdoe initialization to create teams
 function GM:CreateTeams()
@@ -110,6 +110,10 @@ end
 function CheckPropCollision(entA, entB)
 	-- Disable prop on prop collisions
 	if !GetConVar("ph_prop_collision"):GetBool() && (entA && entB && ((entA:IsPlayer() && entA:Team() == TEAM_PROPS && entB:IsValid() && entB:GetClass() == "ph_prop") || (entB:IsPlayer() && entB:Team() == TEAM_PROPS && entA:IsValid() && entA:GetClass() == "ph_prop"))) then
+		return false
+	end
+
+	if IsValid(entA) && IsValid(entB) && entA:IsPlayer() && entB:IsPlayer() then
 		return false
 	end
 

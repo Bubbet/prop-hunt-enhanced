@@ -29,7 +29,15 @@ local function MainFrame()
 	isopened = true
 
 	local frame = vgui.Create("DFrame")
-	frame:SetSize(400,600)
+	
+	local frameHeight = 600
+
+	if GetConVar("ph_tauntpitch_allowed"):GetBool() then
+		frameHeight = frameHeight + 72
+	end
+	
+	frame:SetSize(400, frameHeight)
+
 	frame:SetTitle("Prop Hunt | Taunt Menu")
 	frame:Center()
 	frame:SetVisible(true)
@@ -230,6 +238,47 @@ local function MainFrame()
 	CreateStyledButton(FILL,86,"Close the Window",{5,5,5,5},"vgui/phehud/btn_close.vmt",FILL, function()
 		frame:Close()
 	end)
+
+	
+	if GetConVar("ph_tauntpitch_allowed"):GetBool() then
+
+		local randtauntPitchablePanel = vgui.Create("DPanel", frame)
+		randtauntPitchablePanel:Dock(BOTTOM)
+		randtauntPitchablePanel:SetBackgroundColor(Color(150, 150, 150, 200))
+
+		local randtauntPitchableCheck = vgui.Create("DCheckBoxLabel", randtauntPitchablePanel)
+		randtauntPitchableCheck:Dock(FILL)
+		randtauntPitchableCheck:SetText(PHE.LANG.TAUNTWINDOW.ph_cl_pitched_randtaunts)
+		randtauntPitchableCheck:SetConVar("ph_cl_pitched_randtaunts")
+		randtauntPitchableCheck:SetValue(GetConVar("ph_cl_pitched_randtaunts"):GetBool())
+		randtauntPitchableCheck:SizeToContents()
+
+		local autotauntPitchablePanel = vgui.Create("DPanel", frame)
+		autotauntPitchablePanel:Dock(BOTTOM)
+		autotauntPitchablePanel:SetBackgroundColor(Color(150, 150, 150, 200))
+
+		local autotauntPitchableCheck = vgui.Create("DCheckBoxLabel", autotauntPitchablePanel)
+		autotauntPitchableCheck:Dock(FILL)
+		autotauntPitchableCheck:SetText(PHE.LANG.TAUNTWINDOW.ph_cl_pitched_autotaunts)
+		autotauntPitchableCheck:SetConVar("ph_cl_pitched_autotaunts")
+		autotauntPitchableCheck:SetValue(GetConVar("ph_cl_pitched_autotaunts"):GetBool())
+		autotauntPitchableCheck:SizeToContents()
+
+		local pitchPanel = vgui.Create("DPanel", frame)
+		pitchPanel:Dock(BOTTOM)
+		pitchPanel:SetBackgroundColor(Color(150, 150, 150, 200))
+
+		local pitchSlider = vgui.Create("DNumSlider", pitchPanel)
+		pitchSlider:Dock(FILL)
+		pitchSlider:DockMargin(5, 5, 5, 5)
+		pitchSlider:SetText(PHE.LANG.TAUNTWINDOW.ph_cl_tauntpitch)
+		pitchSlider:SetMin(GetConVar("ph_tauntpitch_min"):GetInt())
+		pitchSlider:SetMax(GetConVar("ph_tauntpitch_max"):GetInt())
+		pitchSlider:SetDecimals(0)
+		pitchSlider:SetValue(100)
+		pitchSlider:SetConVar("ph_cl_tauntpitch")
+	end
+
 
 	list.OnRowRightClick = function(panel,line)
 		hastaunt = true

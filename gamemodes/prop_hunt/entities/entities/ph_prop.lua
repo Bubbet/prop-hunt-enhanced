@@ -16,9 +16,18 @@ function ENT:SetupDataTables() end
 function ENT:Initialize()
 	if SERVER then
 		self:SetModel("models/player/kleiner.mdl")
-		self:SetLagCompensated(true)			
-		self:SetMoveType(MOVETYPE_NONE)
+		self:SetLagCompensated(true)
+		self:PhysicsInit( SOLID_VPHYSICS )
+		self:SetMoveType(MOVETYPE_VPHYSICS)
+		self:SetSolid( SOLID_VPHYSICS )
+		self:SetUseType( SIMPLE_USE )
+		self:DrawShadow(false)
 		self.health = 100
+
+		local phys = self:GetPhysicsObject()
+		if (phys:IsValid()) then
+			phys:Wake()
+		end
 	else
 	
 	end
@@ -39,13 +48,19 @@ function ENT:Think()
 			local pos = me:GetPos()
 			local ang = me:GetAngles()
 			local lockstate = pl:GetPlayerLockedRot()
-			
+
 			if self:GetModel() == "models/player/kleiner.mdl" || self:GetModel() == player_manager.TranslatePlayerModel(GetConVar("cl_playermodel"):GetString()) then
 				self:SetPos(pos)
-			else
-				self:SetPos(pos - Vector(0, 0, self:OBBMins().z))
 			end
-			if !lockstate then self:SetAngles(Angle(0,ang.y,0)) end
+			if !lockstate then
+				self:SetPos(pos - Vector(0, 0, self:OBBMins().z))
+				self:SetAngles(Angle(0,ang.y,0))
+			else
+				local phys = self:GetPhysicsObject()
+				if (phys:IsValid()) then
+					phys:Wake()
+				end
+			end
 		end
 	end
 end
@@ -55,6 +70,16 @@ if SERVER then
 	-- Transmit update
 	function ENT:UpdateTransmitState()
 		return TRANSMIT_ALWAYS
+	end
+
+	function ENT:Use(activator, caller, usetype, value)
+		if activator:Team() == TEAM_HUNTERS then
+			if not self:IsPlayerHolding() then
+				activator:PickupObject(self)
+			else
+				activator:DropObject()
+			end
+		end
 	end
 	
 	-- Main Function

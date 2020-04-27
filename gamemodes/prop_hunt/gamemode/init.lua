@@ -1,5 +1,5 @@
 -- Ship
-resource.AddWorkshop("1754658833")
+resource.AddWorkshop("2048645528")
 
 -- Send required file to clients
 AddCSLuaFile("sh_init.lua")
@@ -301,72 +301,106 @@ function GM:PlayerExchangeProp(pl, ent)
 			pl.ph_prop:SetSolid(SOLID_VPHYSICS)
 			pl.ph_prop:SetPos(pl:GetPos() - Vector(0, 0, ent:OBBMins().z))
 			pl.ph_prop:SetAngles(pl:GetAngles())
+	--[[
+			pl.ph_prop:SetCollisionBounds(ent:GetCollisionBounds())
+			pl.ph_prop:CollisionRulesChanged()
+			local phys = pl:GetPhysicsObject()
+			if (phys:IsValid()) then
+				phys:RecheckCollisionFilter()
+				phys:Wake()
+			end
+			]]
+			pl.ph_prop:PhysicsInit( SOLID_VPHYSICS )
+			pl.ph_prop:SetMoveType( MOVETYPE_VPHYSICS )
+			pl.ph_prop:SetSolid( SOLID_VPHYSICS )
 
 			pl:SetHealth(new_health)
 
-			if GetConVar("ph_sv_enable_obb_modifier"):GetBool() && ent:GetNWBool("hasCustomHull",false) then
-				local hmin	= ent.m_Hull[1]
-				local hmax 	= ent.m_Hull[2]
-				local dmin	= ent.m_dHull[1]
-				local dmax	= ent.m_dHull[2]
 
-				if hmax.z < 24 || dmax.z < 24 then
-					pl:SetViewOffset(Vector(0,0,24))
-					pl:SetViewOffsetDucked(Vector(0,0,24))
-				elseif hmax.z > 84 || dmax.z > 84 then --what the heck Duck Size is 84? BigMomma.mdl?
-					pl:SetViewOffset(Vector(0,0,84))
-					pl:SetViewOffsetDucked(Vector(0,0,84))
+
+			if GetConVar("ph_sv_enable_obb_modifier"):GetBool() && ent:GetNWBool("hasCustomHull",false) then
+				local hullMin, hullMax = ent.m_Hull[1], ent.m_Hull[2]
+				local hullDuckMin, hullDuckMax = ent.m_dHull[1], ent.m_dHull[2]
+
+				if hullMax.z < 24 || hullDuckMax.z < 24 then
+					pl:SetViewOffset(Vector(0, 0, 24))
+					pl:SetViewOffsetDucked(Vector(0, 0, 24))
+				elseif hullMax.z > 84 || hullDuckMax.z > 84 then
+					pl:SetViewOffset(Vector(0, 0, 84))
+					pl:SetViewOffsetDucked(Vector(0, 0, 84))
 				else
-					pl:SetViewOffset(Vector(0,0,hmax.z))
-					pl:SetViewOffsetDucked(Vector(0,0,dmax.z))
+					pl:SetViewOffset(Vector(0, 0, hullMax.z))
+					pl:SetViewOffsetDucked(Vector(0, 0 , hullDuckMax.z))
 				end
 
-				pl:SetHull(hmin,hmax)
-				pl:SetHullDuck(dmin,dmax)
+				pl:SetHull(hullMin, hullMax)
+				pl:SetHullDuck(hullDuckMin, hullDuckMax)
 
 				net.Start("SetHull")
-					net.WriteInt(math.Round(math.Max(hmax.x,hmax.y)),32)
-					net.WriteInt(hmax.z,32)
-					net.WriteInt(dmax.z,32)
+					if GAMEMODE.ExperimentalPropCollisions then
+						net.WriteVector(hullMin)
+						net.WriteVector(hullMax)
+						net.WriteVector(hullDuckMax)
+					else
+						local hullXYMax = math.Round(math.Max(hullMax.x, hullMax.y))
+						net.WriteVector(hullMin)
+						net.WriteVector(Vector(hullXYMax, hullXYMax, hullMax.z))
+						net.WriteVector(Vector(hullXYMax, hullXYMax, hullDuckMax.z))
+					end
 					net.WriteInt(new_health,9)
 				net.Send(pl)
 			else
-				local hullxymax = math.Round(math.Max(ent:OBBMaxs().x, ent:OBBMaxs().y))
-				local hullxymin = hullxymax * -1
-				local hullz = math.Round(ent:OBBMaxs().z - ent:OBBMins().z)
+				local obbMin, obbMax = ent:OBBMins(), ent:OBBMaxs()
+				local hullXMin, hullYMin, hullZMin = obbMin.x, obbMin.y, obbMin.z
+				local hullXMax, hullYMax, hullZMax = obbMax.x, obbMax.y, obbMax.z
+				local hullZAbs = hullZMax - hullZMin
 
-				local dhullz = hullz
-				if hullz > 10 && hullz <= 30 then
-					dhullz = hullz-(hullz * 0.5)
-				elseif hullz > 30 && hullz <= 40 then
-					dhullz = hullz-(hullz * 0.2)
-				elseif hullz > 40 && hullz <= 50 then
-					dhullz = hullz-(hullz * 0.1)
+				local hullZDuckAbs = hullZAbs
+				if hullZAbs > 10 && hullZAbs <= 30 then
+					hullZDuckAbs = hullZAbs-(hullZAbs * 0.5)
+				elseif hullZAbs > 30 && hullZAbs <= 40 then
+					hullZDuckAbs = hullZAbs-(hullZAbs * 0.2)
+				elseif hullZAbs > 40 && hullZAbs <= 50 then
+					hullZDuckAbs = hullZAbs-(hullZAbs * 0.1)
 				else
-					dhullz = hullz
+					hullZDuckAbs = hullZAbs
 				end
 
-				if hullz < 24 then
-					pl:SetViewOffset(Vector(0,0,24))
-					pl:SetViewOffsetDucked(Vector(0,0,24))
-				elseif hullz > 84 then
-					pl:SetViewOffset(Vector(0,0,84))
-					pl:SetViewOffsetDucked(Vector(0,0,84))
+				if hullZAbs < 24 then
+					pl:SetViewOffset(Vector(0, 0, 24))
+					pl:SetViewOffsetDucked(Vector(0, 0, 24))
+				elseif hullZAbs > 84 then
+					pl:SetViewOffset(Vector(0, 0, 84))
+					pl:SetViewOffsetDucked(Vector(0, 0, 84))
 				else
-					pl:SetViewOffset(Vector(0,0,hullz))
-					pl:SetViewOffsetDucked(Vector(0,0,dhullz))
+					pl:SetViewOffset(Vector(0, 0, hullZAbs))
+					pl:SetViewOffsetDucked(Vector(0, 0, hullZDuckAbs))
 				end
 
-				pl:SetHull(Vector(hullxymin, hullxymin, 0), Vector(hullxymax, hullxymax, hullz))
-				pl:SetHullDuck(Vector(hullxymin, hullxymin, 0), Vector(hullxymax, hullxymax, dhullz))
+				local minVector, maxVector, duckMaxVector
+				if GAMEMODE.ExperimentalPropCollisions then
+					minVector = Vector(hullXMin, hullYMin, 0)
+					maxVector = Vector(hullXMax, hullYMax, hullZAbs)
+					duckMaxVector = Vector(hullXMax, hullYMax, hullZDuckAbs)
+				else
+					local hullXYMax = math.Round(math.Max(hullXMax, hullYMax))
+					local hullXYMin = hullXYMax * -1
+					minVector = Vector(hullXYMin, hullXYMin, 0)
+					maxVector = Vector(hullXYMax, hullXYMax, math.Round(hullZAbs))
+					duckMaxVector = Vector(hullXMax, hullYMax, hullZDuckAbs)
+				end
+
+				pl:SetHull(minVector, maxVector)
+				pl:SetHullDuck(minVector, duckMaxVector)
 
 				net.Start("SetHull")
-					net.WriteInt(hullxymax, 32)
-					net.WriteInt(hullz, 32)
-					net.WriteInt(dhullz, 32)
+					net.WriteVector(minVector)
+					net.WriteVector(maxVector)
+					net.WriteVector(duckMaxVector)
 					net.WriteInt(new_health, 9)
 				net.Send(pl)
 			end
+
 		end
 
 		hook.Call("PH_OnChangeProp", nil, pl, ent)
@@ -377,12 +411,13 @@ end
 function GM:PlayerUse(pl, ent)
 	if !pl:Alive() || pl:Team() == TEAM_SPECTATOR || pl:Team() == TEAM_UNASSIGNED then return false; end
 
+	--[[
 	-- Prevent Execution Spam by holding ['E'] button too long.
 	if pl.UseTime <= CurTime() then
 
 		local hmx, hz = ent:GetPropSize()
 		if pl:Team() == TEAM_PROPS && GetConVar("phe_check_props_boundaries"):GetBool() && !pl:CheckHull(hmx, hmx, hz) then
-			pl:SendLua("chat.AddText(Color(235, 10, 15), \"[PH: Enhanced]\", Color(220, 220, 220), \" There is no room to change that prop!\")")
+			pl:SendPHEMessage("There is no room to change that prop!")
 		else
 			self:PlayerExchangeProp(pl, ent)
 		end
@@ -391,6 +426,7 @@ function GM:PlayerUse(pl, ent)
 		pl.UseTime = CurTime() + 1
 
 	end
+	]]
 
 	-- Allow pickup?
 	if IsValid(ent) && (ent:GetClass() == "prop_physics" || ent:GetClass() == "prop_physics_multiplayer") && (GetConVar("ph_allow_prop_pickup"):GetInt() <= 0 || (GetConVar("ph_allow_prop_pickup"):GetInt() == 2 && pl:Team() != TEAM_HUNTERS)) then
@@ -418,18 +454,18 @@ net.Receive("CL2SV_ExchangeProp", function(len, ply)
 
 	--[[
 	if ply.UseTime <= CurTime() then
-	
+
 		if !ply:IsHoldingEntity() then
 			local hmx,hz = Prop:GetPropSize()
 			if (GetConVar("phe_check_props_boundaries"):GetBool() && !ply:CheckHull(hmx,hmx,hz)) then
-				ply:SendLua("chat.AddText(Color(235,10,15), \"[PH: Enhanced]\", Color(220,220,220), \" There is no room to change that prop!\")")
+				ply:SendPHEMessage("There is no room to change that prop!")
 			else
 				GAMEMODE:PlayerExchangeProp(ply, Prop)
 			end
 		end
-		
+
 		ply.UseTime = CurTime() + 1
-		
+
 	end
 	]]
 
@@ -459,18 +495,254 @@ function DoPlayerTaunt(pl)
 		pl.last_taunt_time = CurTime() + GetConVar("ph_normal_taunt_delay"):GetInt()
 		pl.last_taunt = rand_taunt
 
-		pl:EmitSound(rand_taunt, 100)
-		pl:SetNWFloat("LastTauntTime", CurTime())
+
+		if GetConVar("ph_tauntpitch_allowed"):GetBool() && pl:GetInfoNum("ph_cl_pitched_randtaunts", 0) ~= 0 then
+			math.randomseed(os.time())
+			for ix=1,5 do math.random() end
+			pl.ph_prop:EmitSound(rand_taunt, 100, math.random(GetConVar("ph_tauntpitch_min"):GetInt(), GetConVar("ph_tauntpitch_max"):GetInt()))
+		else
+			pl.ph_prop:EmitSound(rand_taunt, 100)
+		end
+
+		pl:SetNWFloat("NextTauntTime", pl:getNextTauntTime())
 	end
 end
 
--- Called when player presses any button
-function GM:PlayerButtonDown (pl, button)
-	-- Stop if player isn't alive or button is not the one the player binded
-	if !pl:Alive () || button != pl:GetInfoNum ("ph_cl_taunt_key", KEY_F4) then return end
 
-	DoPlayerTaunt (pl)
+
+
+-- https://stackoverflow.com/a/15706820
+function GM:spairs(t)
+
+	local keys = {}
+	for k in pairs(t) do keys[#keys+1] = k end
+
+	table.sort(keys)
+
+	local i = 0
+	return function()
+		i = i + 1
+		if keys[i] then
+			return keys[i], t[keys[i]]
+		end
+	end
 end
+
+function GM:TeleportPlayerToClosestSpawnpoint(pl)
+	local playerPos = pl:GetPos()
+	local closestPos = nil
+
+	local trace = {}
+	trace.filter = {pl, pl.ph_prop}
+	local xy, z = pl.ph_prop:GetPropSize()
+	trace.maxs = Vector(xy, xy, z)
+	trace.mins = Vector(-xy, -xy, 0)
+
+
+	local sortedSpawnpoints = {}
+	for _, spawnpoint in pairs(ents.FindByClass("info_player_start")) do
+		local pos = spawnpoint:GetPos()
+		sortedSpawnpoints[pos:DistToSqr(playerPos)] = pos
+	end
+
+
+	local firstPos = nil
+	for dist, pos in GAMEMODE:spairs(sortedSpawnpoints) do
+		if firstPos == nil then
+
+			local x, y, z = (pos - playerPos):Unpack()
+			local sum = math.abs(x) + math.abs(y) + math.abs(z)
+			if sum > 50 then
+				firstPos = pos
+			end
+		end
+
+		if closestPos == nil then
+			for i=1,5,1 do
+				if closestPos == nil then
+					trace.start = pos
+					trace.endpos = pos
+					if !util.TraceHull(trace).Hit then
+						closestPos = pos
+					else
+						pos = pos + Vector(0, 0, 5)
+					end
+				end
+			end
+		end
+	end
+
+	if closestPos != nil then
+		pl:SetPos(closestPos + Vector(0, 0, 100))
+	else
+		if not firstPos then
+			local startpos = Vector(0,0,playerPos.z) --sortedSpawnpoints[1]:GetPos() + Vector(0, 0, 20)
+			local traceDown = util.TraceLine({start=startpos, endpos=startpos - Vector(0,0,1000)})
+			if traceDown.HitSky then
+				return
+			end
+			firstPos = traceDown.hitPos
+		end
+		pl:SetPos(firstPos)
+
+
+		pl:SendPHEMessage(PHE.LANG.UNSTUCK.BAD_SPAWNPOINT)
+		pl:SetVar("unstuckRecently", false)
+
+	end
+end
+
+function GM:PosOnGround(pl)
+	local traceResult = pl:TraceLineFromPlayer(pl:GetPos() - Vector(0, 0, 200))
+	return traceResult.HitPos
+end
+
+function GM:PlayerButtonDown(pl, button)
+
+	if pl:Alive() then
+		if button == pl:GetInfoNum("ph_cl_taunt_key", KEY_F4) then
+			DoPlayerTaunt(pl)
+		elseif button == pl:GetInfoNum("ph_cl_unstuck_key", KEY_F3) then
+			if !pl:IsValid() || pl:Team() != TEAM_PROPS then return end
+
+			if pl:GetVar("unstuckRecently", false) then
+				pl:SendPHEMessage(string.format(PHE.LANG.UNSTUCK.PLEASE_WAIT, GAMEMODE.UnstuckWaitTime))
+				return
+			end
+
+			pl:SetVar("unstuckRecently", true)
+			timer.Simple(GAMEMODE.UnstuckWaitTime, function() pl:SetVar("unstuckRecently", false) end)
+
+			if !pl:IsOnGround() then
+				pl:SendPHEMessage(PHE.LANG.UNSTUCK_NOT_ON_GROUND)
+				local pos = pl:GetPos()
+				local origZ = pos.z
+
+				timer.Simple(0.2, function()
+					local newZ = pl:GetPos().z
+
+					if math.abs(origZ - newZ) > 1 then
+						pl:SendPHEMessage(PHE.LANG.UNSTUCK.NOT_STUCK_JITTER)
+					else
+						local xy, z = pl.ph_prop:GetPropSize()
+						if pl:CheckHull(xy, xy, z) then
+
+							local traceUp = pl:TraceLineFromPlayer(pl:GetPos() + Vector(0, 0, 200))
+
+
+							if traceUp.HitSky then
+								GAMEMODE:UnstuckPlayer(pl)
+							else
+								pl:SetPos(pos + Vector(0, 0, 20))
+								pl:SendPHEMessage(PHE.LANG.UNSTUCK.YOURE_UNSTUCK)
+							end
+						else
+							GAMEMODE:UnstuckPlayer(pl)
+						end
+					end
+				end)
+			else
+				GAMEMODE:UnstuckPlayer(pl)
+			end
+		end
+	end
+end
+
+function GM:UnstuckPlayer(pl)
+	local hullCheckHeight = 10
+
+	local initialPos = GAMEMODE:PosOnGround(pl)
+
+	local trace = {}
+	trace.filter = {pl, pl.ph_prop}
+	local xy, z = pl.ph_prop:GetPropSize()
+	trace.maxs = Vector(xy, xy, z)
+	trace.mins = Vector(-xy, -xy, 0)
+	trace.start = initialPos
+	trace.endpos = initialPos
+
+	local traceResult = util.TraceHull(trace)
+	--[[
+	if !traceResult.Hit then
+		pl:SendPHEMessage(PHE.LANG.UNSTUCK.NOT_STUCK_TOOBAD)
+
+
+		trace.endpos = initialPos - Vector(0, 0, 50)
+		local hitPos = util.TraceLine(trace).HitPos
+
+		if hitPos != initialPos then
+
+
+			pl:SetPos(traceResult.HitPos)
+		end
+
+		return
+	end
+	]]
+	local tries = 0
+	local nogroundBackups = {}
+
+
+	for dist=5,GAMEMODE.UnstuckRange,5 do
+		for rot=5,360,5 do
+
+
+			local vec = Vector(dist, 0, hullCheckHeight)
+			vec:Rotate(Angle(0, rot, 0))
+			local target = vec + initialPos
+
+			trace.start = target
+			trace.endpos = target
+
+			local traceResult = util.TraceHull(trace)
+			if !traceResult.Hit then
+				local correctedTarget = target - Vector(0, 0, hullCheckHeight)
+				pl:SetPos(correctedTarget)
+
+
+				if pl:IsOnGround() then
+					pl:SendPHEMessage(PHE.LANG.UNSTUCK.YOURE_UNSTUCK)
+					return
+				else
+
+
+
+					if tries == 10 then
+						pl:SetPos(nogroundBackups[1])
+						pl:SendPHEMessage(PHE.LANG.UNSTUCK.YOURE_UNSTUCK)
+						return
+					end
+					tries = tries + 1
+
+					table.insert(nogroundBackups, correctedTarget)
+				end
+			end
+		end
+	end
+
+	if #nogroundBackups > 0 then
+		pl:SetPos(nogroundBackups[1])
+		pl:SendPHEMessage(PHE.LANG.UNSTUCK.YOURE_UNSTUCK)
+		return
+	end
+
+	pl:SendPHEMessage(PHE.LANG.UNSTUCK.CANNOT_FIND_SPOT)
+
+	if GAMEMODE.CannotTpUnstuckInRound then
+		local blindlock_time_left = (GetConVar("ph_hunter_blindlock_time"):GetInt() - (CurTime() - GetGlobalFloat("RoundStartTime", 0))) + 1
+		if blindlock_time_left < 1 then
+			pl:SendPHEMessage(PHE.LANG.UNSTUCK.SPAWNPOINTS_DISABLED)
+			return
+		end
+	end
+
+	GAMEMODE:TeleportPlayerToClosestSpawnpoint(pl)
+
+
+
+	pl:SetPos(GAMEMODE:PosOnGround(pl) + Vector(0, 0, 20))
+end
+
 
 -- Called when a player leaves
 function PlayerDisconnected(pl)
@@ -506,7 +778,7 @@ function PlayerSpawn(pl)
 	pl:SetRenderMode(RENDERMODE_TRANSALPHA)
 	pl:UnLock()
 	pl:ResetHull()
-	pl:SetNWFloat("LastTauntTime", CurTime())
+	pl:SetNWFloat("NextTauntTime", pl:getNextTauntTime())
 	pl.last_taunt_time = 0
 
 	net.Start("ResetHull")
@@ -521,6 +793,7 @@ function PlayerSpawn(pl)
 	if pl:Team() == TEAM_HUNTERS then
 		pl:SetJumpPower(160)
 	elseif pl:Team() == TEAM_PROPS then
+		pl:SetCollisionGroup(11)
 		pl:SetJumpPower(160 * GetConVar("ph_prop_jumppower"):GetFloat())
 	end
 
@@ -565,11 +838,79 @@ function GM:RoundTimerEnd()
 end
 
 
+-- https://stackoverflow.com/a/17120745
+function GM:customshuffle(array)
+    local counter = #array
+    while counter > 1 do
+        local index = math.random(counter)
+        array[index], array[counter] = array[counter], array[index]
+        counter = counter - 1
+    end
+end
+function GM:CheckTeamBalanceCustom()
+	local plyrTable = player.GetAll()
+	local plyrCount = #plyrTable
+	local hunterCount = math.floor((plyrCount / 3) + 0.5)
+
+	if GAMEMODE.HunterCount != nil then
+		if GAMEMODE.HunterCount > 0 then
+			hunterCount = math.min(plyrCount - 1, GAMEMODE.HunterCount)
+		end
+	end
+
+	if GAMEMODE.RotateTeams then
+		local offset = GetGlobalInt("RotateTeamsOffset", 1)
+		SetGlobalInt("RotateTeamsOffset", offset + 1)
+
+		offset = offset % plyrCount
+		local max = hunterCount + offset
+		for ix, plyr in ipairs(plyrTable) do
+			if (ix >= (1 + offset) && ix <= max) || (max > plyrCount && ix <= max - plyrCount) then
+				plyr:SetTeam(TEAM_HUNTERS)
+			else
+				plyr:SetTeam(TEAM_PROPS)
+			end
+		end
+	else
+		math.randomseed(os.time())
+		for ix=1,5 do math.random() end
+		for ix=1,math.random(2, 5) do GAMEMODE:customshuffle(plyrTable) end
+
+		if GAMEMODE.PreventConsecutiveHunting then
+
+			local teamContainingHunters = TEAM_HUNTERS
+			if GetConVar("ph_swap_teams_every_round"):GetBool() then
+				teamContainingHunters = TEAM_PROPS
+			end
+
+			for _, pl in pairs(team.GetPlayers(teamContainingHunters)) do
+				pl:SetVar("ForceAsProp", true)
+			end
+		end
+
+		for ix=1,#plyrTable do
+			local plyr = table.remove(plyrTable, math.random(#plyrTable))
+			if ix <= hunterCount then
+				if plyr:GetVar("ForceAsProp", false) then
+					plyr:SetTeam(TEAM_PROPS)
+					hunterCount = hunterCount + 1
+				else
+					plyr:SetTeam(TEAM_HUNTERS)
+				end
+			else
+				plyr:SetTeam(TEAM_PROPS)
+			end
+			plyr:SetVar("ForceAsProp", false)
+		end
+	end
+end
+
+
 -- Called before start of round
 function GM:OnPreRoundStart(num)
 	game.CleanUpMap()
 
-	if GetGlobalInt("RoundNumber") != 1 && (GetConVar("ph_swap_teams_every_round"):GetInt() == 1 || ((team.GetScore(TEAM_PROPS) + team.GetScore(TEAM_HUNTERS)) > 0)) then
+	if GetConVar("ph_swap_teams_every_round"):GetBool() && (GetGlobalInt("RoundNumber") != 1 || ((team.GetScore(TEAM_PROPS) + team.GetScore(TEAM_HUNTERS)) > 0)) then
 		for _, pl in pairs(player.GetAll()) do
 			if pl:Team() == TEAM_PROPS || pl:Team() == TEAM_HUNTERS then
 				if pl:Team() == TEAM_PROPS then
@@ -606,7 +947,11 @@ function GM:OnPreRoundStart(num)
 
 	-- Balance teams?
 	if GetConVar("ph_autoteambalance"):GetBool() then
-		GAMEMODE:CheckTeamBalance()
+		if GetConVar("ph_originalteambalance"):GetBool() then
+			GAMEMODE:CheckTeamBalance()
+		else
+			GAMEMODE:CheckTeamBalanceCustom()
+		end
 	end
 
 	UTIL_StripAllPlayers()
@@ -772,7 +1117,7 @@ function PlayerPressedKey(pl, key)
 					if !pl:IsHoldingEntity() then
 						local hmx, hz = trace2.Entity:GetPropSize()
 						if GetConVar("phe_check_props_boundaries"):GetBool() && !pl:CheckHull(hmx, hmx, hz) then
-							pl:SendLua("chat.AddText(Color(235, 10, 15), \"[PH: Enhanced]\", Color(220, 220, 220), \" There is no room to change that prop!\")")
+							pl:SendPHEMessage("There is no room to change that prop!")
 						else
 							GAMEMODE:PlayerExchangeProp(pl, trace2.Entity)
 						end

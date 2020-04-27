@@ -8,11 +8,11 @@ RTV.ChatCommands = {
 
 RTV.TotalVotes = 0
 
-RTV.Wait = 60 -- The wait time in seconds. This is how long a player has to wait before voting when the map changes. 
+RTV.Wait = 0 -- The wait time in seconds. This is how long a player has to wait before voting when the map changes.
 
 RTV._ActualWait = CurTime() + RTV.Wait
 
-RTV.PlayerCount = MapVote.Config.RTVPlayerCount or 3
+RTV.PlayerCount = MapVote.Config.RTVPlayerCount or 1
 
 function RTV.ShouldChange()
 	return RTV.TotalVotes >= math.Round(#player.GetAll() * 0.66)

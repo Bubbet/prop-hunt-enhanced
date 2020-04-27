@@ -1,9 +1,6 @@
 -- Validity check to prevent some sort of spam
 local function IsDelayed(ply)
-	local lastTauntTime = ply:GetNWFloat("LastTauntTime")
-	local delayedTauntTime = lastTauntTime + GetConVar("ph_customtaunts_delay"):GetInt()
-	local currentTime = CurTime()
-	return delayedTauntTime > currentTime
+	return ply:GetNWFloat("NextTauntTime") > CurTime()
 end
 
 net.Receive("CL2SV_PlayThisTaunt", function(len, ply)
@@ -11,8 +8,14 @@ net.Receive("CL2SV_PlayThisTaunt", function(len, ply)
 
 	if IsValid(ply) && !IsDelayed(ply) then
 		if file.Exists("sound/" .. snd, "GAME") then
-			ply:EmitSound(snd, 100)
-			ply:SetNWFloat("LastTauntTime", CurTime())
+			
+
+			local pitch = ply:GetInfoNum("ph_cl_tauntpitch", 100)
+			local correctedPitch = math.Clamp(pitch, GetConVar("ph_tauntpitch_min"):GetInt(), GetConVar("ph_tauntpitch_max"):GetInt())
+
+			ply:EmitSound(snd, 100, correctedPitch)
+
+			ply:SetNWFloat("NextTauntTime", ply:getNextTauntTime())
 		else
 			ply:ChatPrint("[PH: Enhanced] - Warning: That taunt you selected does not exists on server!")
 		end

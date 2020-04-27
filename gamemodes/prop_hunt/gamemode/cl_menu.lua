@@ -564,6 +564,7 @@ function ph_BaseMainWindow(ply, cmd, args)
 		Ph:CreateVGUIType("cl_enable_luckyballs_icon", "check", "CLIENT", gridpl, PHE.LANG.PHEMENU.PLAYER.cl_enable_luckyballs_icon)
 		Ph:CreateVGUIType("cl_enable_devilballs_icon", "check", "CLIENT", gridpl, PHE.LANG.PHEMENU.PLAYER.cl_enable_devilballs_icon)
 		Ph:CreateVGUIType("ph_cl_taunt_key", "binder", "CLIENT", gridpl, PHE.LANG.PHEMENU.PLAYER.ph_cl_taunt_key)
+		Ph:CreateVGUIType("ph_cl_unstuck_key", "binder", "CLIENT", gridpl, PHE.LANG.PHEMENU.PLAYER.ph_cl_unstuck_key) 
 		Ph:CreateVGUIType("hudspacer","spacer",nil,gridpl,"" )
 		Ph:CreateVGUIType("", "label", false, gridpl, "HUD Settings")
 		Ph:CreateVGUIType("ph_hud_use_new", "check", "CLIENT", gridpl, PHE.LANG.PHEMENU.PLAYER.ph_hud_use_new)
@@ -614,15 +615,81 @@ function ph_BaseMainWindow(ply, cmd, args)
 		Ph:CreateVGUIType("ph_normal_taunt_delay", "slider", {min = 2, max = 120, init = GetConVar("ph_normal_taunt_delay"):GetInt(), dec = 0, kind = "SERVER"}, grid, PHE.LANG.PHEMENU.ADMINS.ph_normal_taunt_delay)
 		Ph:CreateVGUIType("ph_autotaunt_enabled", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_autotaunt_enabled)
 		Ph:CreateVGUIType("ph_autotaunt_delay", "slider", {min = 30, max = 180, init = GetConVar("ph_autotaunt_delay"):GetInt(), dec = 0, kind = "SERVER"}, grid, PHE.LANG.PHEMENU.ADMINS.ph_autotaunt_delay)
+		
+		Ph:CreateVGUIType("ph_tauntpitch_allowed", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_tauntpitch_allowed)
+		Ph:CreateVGUIType("ph_tauntpitch_min", "slider", {min = 0, max = 100, init = GetConVar("ph_tauntpitch_min"):GetInt(), dec = 0, kind = "SERVER"}, grid, PHE.LANG.PHEMENU.ADMINS.ph_tauntpitch_min)
+		Ph:CreateVGUIType("ph_tauntpitch_max", "slider", {min = 100, max = 255, init = GetConVar("ph_tauntpitch_max"):GetInt(), dec = 0, kind = "SERVER"}, grid, PHE.LANG.PHEMENU.ADMINS.ph_tauntpitch_max)
+		Ph:CreateVGUIType("devspacer", "spacer", nil, grid, "")
+
 		Ph:CreateVGUIType("ph_forcejoinbalancedteams", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_forcejoinbalancedteams)
 		Ph:CreateVGUIType("ph_autoteambalance", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_autoteambalance)
+		
+		Ph:CreateVGUIType("ph_originalteambalance", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_originalteambalance)
+		if GetConVar("ph_originalteambalance"):GetBool() then
+			Ph:CreateVGUIType("", "label", false, grid, PHE.LANG.PHEMENU.ADMINS.ph_originalteambalance_uncheck)
+		else
+			Ph:CreateVGUIType("ph_preventconsecutivehunting", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_preventconsecutivehunting)
+			Ph:CreateVGUIType("ph_rotateteams", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_rotateteams)
+			Ph:CreateVGUIType("ph_huntercount", "slider", {min = 0, max = player.GetCount() - 1, init = GetConVar("ph_huntercount"):GetInt(), dec = 0, kind = "SERVER"}, grid, PHE.LANG.PHEMENU.ADMINS.ph_huntercount)
+			Ph:CreateVGUIType("", "label", "DermaDefault", grid, PHE.LANG.PHEMENU.ADMINS.ResetRotateTeams_warning)
+			Ph:CreateVGUIType("", "btn", {max = 1, textdata = {
+				[1] = {PHE.LANG.PHEMENU.ADMINS.ResetRotateTeams, function(self)
+					net.Start("ResetRotateTeams")
+					net.SendToServer()
+				end}
+				}
+			}, grid, "")
+			
+			Ph:CreateVGUIType("", "label", "DermaDefault", grid, PHE.LANG.PHEMENU.ADMINS.ForceHunterAsProp_warning)
+
+			local hunterTbls = {}
+			local tmpTable = {}
+			for ix, plyr in ipairs(team.GetPlayers(TEAM_HUNTERS)) do
+				if ix > 6 && ix % 6 == 1 then 
+					table.insert(hunterTbls, tmpTable)
+					tmpTable = {}
+				end
+
+				table.insert(tmpTable, {
+					plyr:GetName(), function(self)
+						if GetConVar("ph_autoteambalance"):GetBool() && !GetConVar("ph_rotateteams"):GetBool() then
+							net.Start("ForceHunterAsProp")
+							net.WriteUInt(plyr:UserID(), 16)
+							net.SendToServer()
+						else
+							LocalPlayer():ChatPrint(PHE.LANG.PHEMENU.ADMINS.ForceHunterAsProp_randomonly)
+						end
+					end
+				})
+			end
+			table.insert(hunterTbls, tmpTable)
+
+			if #hunterTbls[1] > 0 then
+				for _, hunterTbl in pairs(hunterTbls) do
+					Ph:CreateVGUIType("", "btn", {max = #hunterTbl, textdata = hunterTbl}, grid, "")
+				end
+			else
+				Ph:CreateVGUIType("", "btn", {max = 1, textdata = {
+					[1] = {PHE.LANG.PHEMENU.ADMINS.ForceHunterAsProp_nohunters, function(self)
+						LocalPlayer():ChatPrint(PHE.LANG.PHEMENU.ADMINS.ForceHunterAsProp_nohuntersmsg)
+					end}
+					}
+				}, grid, "")
+			end
+		end
+
+		Ph:CreateVGUIType("devspacer","spacer",nil,grid,"" )
+		Ph:CreateVGUIType("ph_unstuck_waittime", "slider", {min = 0, max = 30, init = GetConVar("ph_unstuck_waittime"):GetInt(), dec = 0, kind = "SERVER"}, grid, PHE.LANG.PHEMENU.ADMINS.ph_unstuck_waittime)
+		Ph:CreateVGUIType("ph_disabletpunstuckinround", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_disabletpunstuckinround)
+
 		Ph:CreateVGUIType("", "label", "DermaDefault", grid, PHE.LANG.PHEMENU.ADMINS.ph_allow_prop_pickup)
 		Ph:CreateVGUIType("ph_allow_prop_pickup", "slider", {min = 0, max = 2, init = GetConVar("ph_allow_prop_pickup"):GetInt(), dec = 0, kind = "SERVER"}, grid, PHE.LANG.PHEMENU.ADMINS.ph_allow_prop_pickup)
-		Ph:CreateVGUIType("devspacer","spacer",nil,grid,"" )
+
 		Ph:CreateVGUIType("ph_notice_prop_rotation", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_notice_prop_rotation)
 		Ph:CreateVGUIType("ph_prop_camera_collisions", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_prop_camera_collisions)
 		Ph:CreateVGUIType("ph_freezecam", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_freezecam)
 		Ph:CreateVGUIType("ph_prop_collision", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_prop_collision)
+		Ph:CreateVGUIType("ph_falldamage", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_falldamage) 
 		Ph:CreateVGUIType("ph_swap_teams_every_round", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_swap_teams_every_round)
 		Ph:CreateVGUIType("ph_hunter_fire_penalty", "slider", 	{min = 2, max = 80, init = GetConVar("ph_hunter_fire_penalty"):GetInt(), dec = 0, kind = "SERVER"}, grid, PHE.LANG.PHEMENU.ADMINS.ph_hunter_fire_penalty)
 		Ph:CreateVGUIType("ph_hunter_kill_bonus", "slider", 	{min = 5, max = 100, init = GetConVar("ph_hunter_kill_bonus"):GetInt(), dec = 0, kind = "SERVER"}, grid, PHE.LANG.PHEMENU.ADMINS.ph_hunter_kill_bonus)
@@ -679,6 +746,9 @@ function ph_BaseMainWindow(ply, cmd, args)
 		Ph:CreateVGUIType("devspacer","spacer",nil,grid,"" )
 		Ph:CreateVGUIType("", "label", false, grid, "Developer Options/Experimentals Features")
 		Ph:CreateVGUIType("phe_check_props_boundaries", "check", "SERVER", grid, "[WORK IN PROGRESS] Enable Boundaries Check? This prevents you to get stuck with objects/walls.")
+		
+		Ph:CreateVGUIType("ph_experimentalpropcollisions", "check", "SERVER", grid, PHE.LANG.PHEMENU.ADMINS.ph_experimentalpropcollisions)
+
 		Ph:CreateVGUIType("ph_mkbren_use_new_mdl","check","SERVER",grid, "Developer: Use new model for Bren MK II Bonus Weapon (Require Map Restart!)")
 		Ph:CreateVGUIType("ph_print_verbose", "check", "SERVER", grid, "Developer: Enable verbose information of PH:E events in the console")
 		Ph:CreateVGUIType("ph_enable_plnames", "check", "SERVER", grid, "Enable Player team names to be appear on their screen.")

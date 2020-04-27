@@ -26,5 +26,10 @@ util.AddNetworkString("PH_TeamWinning_Snd")
 util.AddNetworkString("AutoTauntSpawn")
 util.AddNetworkString("AutoTauntRoundEnd")
 
+
+util.AddNetworkString("ResetRotateTeams")
+util.AddNetworkString("ForceHunterAsProp")
+
+
 -- some stupid checks
 util.AddNetworkString("PHE.rotateState")

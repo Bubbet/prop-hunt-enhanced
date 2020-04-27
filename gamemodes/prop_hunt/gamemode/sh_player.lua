@@ -25,6 +25,28 @@ function Player:CheckHull(hx,hy,hz)
 	return true
 end
 
+function Player:getNextTauntTime(lastTauntTime)
+	lastTauntTime = lastTauntTime or CurTime()
+	local volume = 100000
+	if IsValid(self.ph_prop) then volume = self.ph_prop:GetPhysicsObject():GetVolume() end
+	return lastTauntTime + Lerp(math.Clamp(volume / 250, 100, 200)/200, GetConVar("ph_autotaunt_forsmall_delay"):GetInt(), GetConVar("ph_autotaunt_delay"):GetInt())
+end
+
+function Player:TraceLineFromPlayer(endpos)
+	local trace = {}
+	trace.filter = {self, self.ph_prop}
+	trace.start = self:GetPos()
+	trace.endpos = endpos
+
+	local traceResult = util.TraceLine(trace)
+	return traceResult
+end
+
+function Player:SendPHEMessage(text)
+	self:SendLua("chat.AddText(Color(235, 10, 15), \"[PH: Enhanced]\", Color(220, 220, 220), \" " .. text .. "\")")
+end
+
+
 -- Blinds the player by setting view out into the void
 function Player:Blind(bool)
 	if !self:IsValid() then return end
@@ -78,6 +100,7 @@ end
 
 if SERVER then
 	function Player:IsHoldingEntity()
+
 		if !self.LastPickupEnt then
 			return false
 		end

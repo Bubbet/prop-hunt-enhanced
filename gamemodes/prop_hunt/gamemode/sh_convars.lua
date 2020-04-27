@@ -58,7 +58,8 @@ function printVerbose(text)
 end
 
 -- Autotaunt delay (in seconds)
-local at_delay	= CreateConVar("ph_autotaunt_delay", "45", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE }, "The delay for the auto taunt")
+local at_delay	= CreateConVar("ph_autotaunt_delay", "45", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE }, "The delay for the auto taunt's smallest value based on prop size")
+local at_small_delay = CreateConVar("ph_autotaunt_forsmall_delay", "25", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE }, "The delay for the auto taunt's smallest value based on prop size")
 
 -- Is autotaunt enabled
 local at_enable	= CreateConVar("ph_autotaunt_enabled", "1",{ FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE }, "Should auto taunting be enabled")
@@ -93,4 +94,68 @@ end)
 
 cvars.AddChangeCallback("ph_autoteambalance", function()
 	GAMEMODE.AutomaticTeamBalance = GetConVar("ph_autoteambalance"):GetBool()
+end)
+
+
+local unstuckRange = CreateConVar("ph_unstuckrange", "250", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Allowed range for the unstuck process (default = 250, should be a multiple of 5)")
+local cannotTpUnstuckInRound = CreateConVar("ph_disabletpunstuckinround", "0", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Disable last-resort unstuck teleportations to spawnpoints outside of the hiding phase")
+local unstuckWaittime = CreateConVar("ph_unstuck_waittime", "5", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "How much seconds must pass between each unstuck attempt")
+
+local originalTeamBalance = CreateConVar("ph_originalteambalance", "0", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Use PH:E's original auto-balancing (disables all following team-related options)")
+local rotateTeams = CreateConVar("ph_rotateteams", "0", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Disable shuffle mode and rotate players instead")
+local hunterCount = CreateConVar("ph_huntercount", "0", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Hunter count (0 = automatic)")
+local preventConsecutiveHunting = CreateConVar("ph_preventconsecutivehunting", "1", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Prevent players from being a Hunter twice in a row (shuffle mode only)")
+
+local experimentalPropCollisions = CreateConVar("ph_experimentalpropcollisions", "0", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "[EXPERIMENTAL] Less strict prop collisions (might prevent getting stuck), but sometimes gives a small hitbox to big props (doesn't affect bullets)")
+
+local allowTauntPitch = CreateConVar("ph_tauntpitch_allowed", "1", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Whether players can use taunt pitch functionality")
+local minTauntPitch = CreateConVar("ph_tauntpitch_min", "60", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Minimum taunt pitch players can use", 0, 100)
+local maxTauntPitch = CreateConVar("ph_tauntpitch_max", "180", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Maximum taunt pitch players can use", 100, 255)
+
+local fallDamage = CreateConVar("ph_falldamage", "1", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Enable fall damage")
+
+GM.UnstuckRange = unstuckRange:GetInt()
+GM.CannotTpUnstuckInRound = cannotTpUnstuckInRound:GetBool()
+GM.UnstuckWaitTime = unstuckWaittime:GetInt()
+GM.OriginalTeamBalance = originalTeamBalance:GetBool()
+GM.RotateTeams = rotateTeams:GetBool()
+GM.HunterCount = hunterCount:GetInt()
+GM.PreventConsecutiveHunting = preventConsecutiveHunting:GetBool()
+GM.ExperimentalPropCollisions = experimentalPropCollisions:GetBool()
+GM.FallDamage = fallDamage:GetBool()
+
+cvars.AddChangeCallback("ph_unstuckrange", function()
+	GAMEMODE.UnstuckRange = GetConVar("ph_unstuckrange"):GetInt()
+end)
+
+cvars.AddChangeCallback("ph_disabletpunstuckinround", function()
+	GAMEMODE.CannotTpUnstuckInRound = GetConVar("ph_disabletpunstuckinround"):GetBool()
+end)
+
+cvars.AddChangeCallback("ph_unstuck_waittime", function()
+	GAMEMODE.UnstuckWaitTime = GetConVar("ph_unstuck_waittime"):GetInt()
+end)
+
+cvars.AddChangeCallback("ph_originalteambalance", function()
+	GAMEMODE.OriginalTeamBalance = GetConVar("ph_originalteambalance"):GetBool()
+end)
+
+cvars.AddChangeCallback("ph_rotateteams", function()
+	GAMEMODE.RotateTeams = GetConVar("ph_rotateteams"):GetBool()
+end)
+
+cvars.AddChangeCallback("ph_huntercount", function()
+	GAMEMODE.HunterCount = GetConVar("ph_huntercount"):GetInt()
+end)
+
+cvars.AddChangeCallback("ph_preventconsecutivehunting", function()
+	GAMEMODE.PreventConsecutiveHunting = GetConVar("ph_preventconsecutivehunting"):GetBool()
+end)
+
+cvars.AddChangeCallback("ph_experimentalpropcollisions", function()
+	GAMEMODE.ExperimentalPropCollisions = GetConVar("ph_experimentalpropcollisions"):GetBool()
+end)
+
+cvars.AddChangeCallback("ph_falldamage", function()
+	GAMEMODE.FallDamage = GetConVar("ph_falldamage"):GetBool()
 end)

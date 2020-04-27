@@ -7,7 +7,7 @@ function PH_Create_PlayerClip(min, max)
 	pc.min = min
 	pc.max = max
 	pc.pos = pc.max - ((pc.max - pc.min) / 2)
-	
+
 	pc:SetPos(pc.pos)
 	pc:Spawn()
 end

@@ -10,11 +10,11 @@ LANG.Help = [[	Un modo de juego mejorado basado en el clásico 'Prop Hunt'
 
 	Para ver más ayuda, abra el 'Menú de Prop Hunt'.
 
-	Versión: %u Revisión: %s
+	Versión: %s
 		Que hay de nuevo:
-		- Soporte para múltiples idiomas
-		- Más opciones en el Menú de Prop Hunt
-		- Gamemode mejor optimizado
+		- Mejor equilibracion de equipo
+		- Un botón para desbloquear
+		- Tono de pulla personalizable
 		- Y mucho más!
 
 	Traducción al español por Fafy!
@@ -194,14 +194,12 @@ LANG.PHEMENU.MAPVOTE.STOP = "Parar MapVote"
 LANG.PHEMENU.ABOUT = {}
 
 LANG.PHEMENU.ABOUT.CURRENTVER = "Versión actual: "
-LANG.PHEMENU.ABOUT.CURRENTREV = "Revisión actual: "
 LANG.PHEMENU.ABOUT.ENJOYING = "Si estas disfrutando el juego, considera ayudarnos donando!"
 LANG.PHEMENU.ABOUT.LINKS = "Links y créditos"
 LANG.PHEMENU.ABOUT.THANKS = "Gracias especiales: " -- Necesito uno mejor
 LANG.PHEMENU.ABOUT.TAB = "Acerca de PHE"
-LANG.PHEMENU.ABOUT.DONATE = "Donar al proyecto PH:E"
+LANG.PHEMENU.ABOUT.DONATE = "Donar a Wolvindra"
 LANG.PHEMENU.ABOUT.HOME = "PH:E Página oficial"
-LANG.PHEMENU.ABOUT.GITHUB = "Repositorio GitHub"
 
 
 LANG.PHEMENU.TABS = {}

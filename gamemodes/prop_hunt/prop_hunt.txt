@@ -1,17 +1,64 @@
 "prop_hunt"
 {
-	"base"		"base"
+	"base"		"fretta13"
 	"title"		"Prop Hunt"
 	"maps"      "^ph_"
 
 	"fretta_maps"
         {
-    "1"	  "ph_"
+            //"1"	  "ph_"
+            "1" "ph_alleys"
+            "2" "ph_islandhouse"
+            "3" "ph_terraces"
+            "4" "ph_rustyshack"
+            "5" "ph_villa"
+            "6" "ph_theater"
+            "7" "ph_secretlab"
+            "8" "ph_skyscraper"
+            "9" "ph_indieoffice"
+            "10" "ph_prohunt"
+            "11" "ph_youturd"
+            "12" "ph_resortmadness"
+            "13" "ph_chalet"
+            "14" "ph_nannerstreet"
+            "15" "ph_abandonedpost"
+            "16" "ph_apartment_v2"
+            "17" "ph_apture"
+            "18" "ph_barrelworld"
+            "19" "ph_bikinibottom"
+            "20" "ph_bikinibottom_edit_sdp"
+            "21" "ph_bookfactory"
+            "22" "ph_building_a3"
+            "23" "ph_danceparty"
+            "24" "ph_disco_club"
+            "25" "ph_elementary_school"
+            "26" "ph_houseonlake"
+            "27" "ph_jesterhaus"
+            "28" "ph_kleiner"
+            "29" "ph_zombie_bunker_xmas"
+            "30" "ph_losthotel"
+            "31" "ph_mansion_v1"
+            "32" "ph_nuclear"
+            "33" "ph_merry_christmas"
+            "34" "ph_oceanwaves"
+            "35" "ph_murderhotel_v1"
+            "36" "ph_prophouse" // brett's gonna be a got at this one.
+            "37" "ph_solidmetal"
+            "38" "ph_storage"
+            "39" "ph_streets"
+            "40" "ph_waste"
+            "41" "ph_theater_v1"
+            "42" "ph_towm"
+            "43" "ph_vg_school"
+            "44" "ph_tunel_v2"
+            "45" "ph_the_shop"
+            "46" "ph_mangaclub"
+            "47" "ph_school"
         }
         "selectable"            "1"
-        
+
 	"menusystem"	"1"
-	"workshopid"	"1754658833"
+	"workshopid"	"2048645528"
 	"settings"
 	{
 		1
@@ -49,7 +96,7 @@
 			"type"		"Numeric"
 			"default"	"30"
 		}
-		
+
 		5
 		{
 			"name"		"ph_hunter_blindlock_time"
@@ -58,7 +105,7 @@
 			"type"		"Numeric"
 			"default"	"30"
 		}
-		
+
 		6
 		{
 			"name"		"ph_round_time"
@@ -67,7 +114,7 @@
 			"type"		"Numeric"
 			"default"	"300"
 		}
-		
+
 		7
 		{
 			"name"		"ph_rounds_per_map"
@@ -76,7 +123,7 @@
 			"type"		"Numeric"
 			"default"	"10"
 		}
-		
+
 		8
 		{
 			"name"		"ph_prop_camera_collisions"
@@ -85,7 +132,7 @@
 			"type"		"CheckBox"
 			"default"	"1"
 		}
-		
+
 		9
 		{
 			"name"		"ph_freezecam"
@@ -94,7 +141,7 @@
 			"type"		"CheckBox"
 			"default"	"1"
 		}
-		
+
 		10
 		{
 			"name"		"ph_prop_collision"
@@ -103,7 +150,7 @@
 			"type"		"CheckBox"
 			"default"	"1"
 		}
-		
+
 		11
 		{
 			"name"		"ph_use_custom_plmodel"
@@ -112,7 +159,7 @@
 			"type"		"CheckBox"
 			"default"	"0"
 		}
-		
+
 		12
 		{
 			"name"		"ph_use_custom_plmodel_for_prop"
@@ -121,7 +168,7 @@
 			"type"		"CheckBox"
 			"default"	"0"
 		}
-		
+
 		13
 		{
 			"name"		"ph_enable_custom_taunts"
@@ -130,7 +177,7 @@
 			"type"		"Numeric"
 			"default"	"2"
 		}
-		
+
 		14
 		{
 			"name"		"ph_customtaunts_delay"
@@ -148,7 +195,7 @@
 			"type"		"Numeric"
 			"default"	"6"
 		}
-		
+
 		16
 		{
 			"name"		"ph_enable_lucky_balls"
@@ -157,7 +204,7 @@
 			"type"		"CheckBox"
 			"default"	"1"
 		}
-		
+
 		17
 		{
 			"name"		"ph_enable_plnames"
@@ -166,7 +213,7 @@
 			"type"		"CheckBox"
 			"default"	"0"
 		}
-		
+
 		18
 		{
 			"name"		"ph_waitforplayers"
@@ -175,7 +222,7 @@
 			"type"		"CheckBox"
 			"default"	"0"
 		}
-		
+
 		19
 		{
 			"name"		"ph_min_waitforplayers"
@@ -197,17 +244,35 @@
 		21
 		{
 			"name"		"ph_autotaunt_delay"
-			"text"		"Auto Taunt Timer"
-			"help"		"Time before auto taunt is invoked"
+			"text"		"Auto Taunt Large Timer"
+			"help"		"Time before auto taunt is invoked for large props"
 			"type"		"Numeric"
 			"default"	"45"
 		}
 		22
+        {
+        	"name"		"ph_autotaunt_forsmall_delay"
+        	"text"		"Auto Taunt Small Timer"
+        	"help"		"Time before auto taunt is invoked for small props"
+        	"type"		"Numeric"
+        	"default"	"25"
+        }
+
+		23
 		{
 			"name"		"ph_hunter_smg_grenades"
 			"text"		"SMG Grenades"
 			"help"		"Grenades given to hunters"
 			"type"		"Numeric"
+			"default"	"1"
+		}
+
+		24
+		{
+			"name"		"ph_falldamage"
+			"text"		"Enable Fall Damage"
+			"help"		"Whether players should take damage when falling from heights"
+			"type"		"CheckBox"
 			"default"	"1"
 		}
 	}

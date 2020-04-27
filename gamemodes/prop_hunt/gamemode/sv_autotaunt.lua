@@ -2,11 +2,7 @@
 local function TauntTimeLeft(ply)
 	-- Always return 1 when the conditions are not met
 	if !IsValid(ply) || !ply:Alive() || ply:Team() != TEAM_PROPS then return 1; end
-
-	local lastTauntTime = ply:GetNWFloat("LastTauntTime")
-	local nextTauntTime = lastTauntTime + GetConVar("ph_autotaunt_delay"):GetInt()
-	local currentTime = CurTime()
-	return nextTauntTime - currentTime
+	return ply:GetNWFloat("NextTauntTime") - CurTime()
 end
 
 local function AutoTauntThink()
@@ -20,8 +16,16 @@ local function AutoTauntThink()
 			if IsValid(ply) && ply:Alive() && ply:Team() == TEAM_PROPS && timeLeft <= 0 then
 				local rand_taunt = table.Random(WHOLE_TAUNTS)
 				if !isstring(rand_taunt) then rand_taunt = tostring(rand_taunt); end
-				ply:EmitSound(rand_taunt, 100)
-				ply:SetNWFloat("LastTauntTime", CurTime())
+				
+				if GetConVar("ph_tauntpitch_allowed"):GetBool() && ply:GetInfoNum("ph_cl_pitched_autotaunts", 0) ~= 0 then
+					math.randomseed(os.time())
+					for ix=1,5 do math.random() end 
+					ply.ph_prop:EmitSound(rand_taunt, 100, math.random(GetConVar("ph_tauntpitch_min"):GetInt(), GetConVar("ph_tauntpitch_max"):GetInt()))
+				else
+					ply.ph_prop:EmitSound(rand_taunt, 100)
+				end
+
+				ply:SetNWFloat("NextTauntTime", ply:getNextTauntTime())
 			end
 		end
 

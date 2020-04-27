@@ -11,6 +11,13 @@ CreateClientConVar("ph_show_custom_crosshair","1",true,false,"Show custom crossh
 CreateClientConVar("ph_show_tutor_control","1",true,false,"Show 'Prop Gameplay Control' hud on each prop spawns. This only show twice and reset until map changes/user disconnect.")
 CreateClientConVar("ph_cl_taunt_key","95",true,true,"Key to play a random taunt or open the taunts menu depending on server settings.")
 
+
+CreateClientConVar("ph_cl_unstuck_key", "94", true, true, "Key to try to unstuck")
+CreateClientConVar("ph_cl_tauntpitch", "100", false, true, "Taunt pitch (100 = normal)", 0, 255)
+CreateClientConVar("ph_cl_pitched_autotaunts", "0", true, true, "Whether to use a random pitch for autotaunts")
+CreateClientConVar("ph_cl_pitched_randtaunts", "0", true, true, "Whether to use a random pitch for random taunts that were manually triggered")
+
+
 surface.CreateFont( "HunterBlindLockFont",
 	{
 		font	= "Arial",
@@ -310,6 +317,7 @@ function PHEDrawPropselectHalos()
 			table.insert(ent_table, trace2.Entity)
 			halo.Add(ent_table, Color(20, 250, 0), 1.2, 1.2, 1, true, true)
 		end
+		halo.Add(ents.FindByClass("ph_prop"), Color(0, 20, 250), 1.2, 1.2, 1, true, false)
 	end
 end
 hook.Add("PreDrawHalos", "PHEDrawPropselectHalos", PHEDrawPropselectHalos)
@@ -411,14 +419,18 @@ end)
 
 -- Sets the player hull
 net.Receive("SetHull", function()
-	local hullxy = net.ReadInt(32)
-	local huz = net.ReadInt(32)
-	local hulldz = net.ReadInt(32)
+	
+	local minVector = net.ReadVector()
+	local maxVector = net.ReadVector()
+	local duckMaxVector = net.ReadVector()
 	local new_health = net.ReadInt(9)
-	cHullz = huz
-	LocalPlayer():SetHull(Vector(hullxy * -1, hullxy * -1, 0), Vector(hullxy, hullxy, huz))
-	LocalPlayer():SetHullDuck(Vector(hullxy * -1, hullxy * -1, 0), Vector(hullxy, hullxy, hulldz))
+
+	cHullz = maxVector.z
+	LocalPlayer():SetHull(minVector, maxVector)
+	LocalPlayer():SetHullDuck(minVector, duckMaxVector)
+
 	LocalPlayer():SetHealth(new_health)
+
 end)
 
 -- Replaces the flashlight with a client-side dynamic light for props

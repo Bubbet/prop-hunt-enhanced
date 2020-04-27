@@ -6,13 +6,13 @@ LANG.Name = "english"
 LANG.NameEnglish = "english"
 
 LANG.Help = [[	An Enhanced Classic Prop Hunt Gamemode.
-To See More Help, Click 'Prop Hunt Menu' for more!
+To See More Help, Click 'Prop Hunt Menu'!
 
-	Version: %u  Revision: %s
+	Version: %s
 		What's New:
-		- Multilanguage support (WIP)
-		- More options on PHE menu
-		- More optimization
+		- Improved team balancing
+		- An unstuck button
+		- Customizable taunt pitch
 		- And much more!
 	]]
 
@@ -197,14 +197,58 @@ LANG.PHEMENU.MAPVOTE.STOP = "Stop MapVote"
 LANG.PHEMENU.ABOUT = {}
 
 LANG.PHEMENU.ABOUT.CURRENTVER = "Current Version: "
-LANG.PHEMENU.ABOUT.CURRENTREV = "Current Revision: "
 LANG.PHEMENU.ABOUT.ENJOYING = "If you are enjoying the game, consider donating!"
 LANG.PHEMENU.ABOUT.LINKS = "Links and credits"
 LANG.PHEMENU.ABOUT.THANKS = "Special thanks: "
 LANG.PHEMENU.ABOUT.TAB = "About PHE"
-LANG.PHEMENU.ABOUT.DONATE = "Donate to PH:E project"
+LANG.PHEMENU.ABOUT.DONATE = "Donate to Wolvindra"
 LANG.PHEMENU.ABOUT.HOME = "PH:E Official Homepage"
-LANG.PHEMENU.ABOUT.GITHUB = "GitHub Repository"
+
+
+LANG.ERROR_ADMIN_ONLY = "You must be an admin to do this."
+
+LANG.TAUNTWINDOW = {}
+LANG.TAUNTWINDOW.ph_cl_tauntpitch = "Pitch (100 = normal)"
+LANG.TAUNTWINDOW.ph_cl_pitched_autotaunts = "Use a random pitch for autotaunts"
+LANG.TAUNTWINDOW.ph_cl_pitched_randtaunts = "Use a random pitch for random taunts that were manually triggered"
+
+LANG.FORCEHUNTERASPROP = {}
+LANG.FORCEHUNTERASPROP.WILL_BE = " will be a Prop next round."
+LANG.FORCEHUNTERASPROP.ALREADY = " has already been defined as a Prop for next round."
+
+LANG.UNSTUCK = {}
+LANG.UNSTUCK.YOURE_UNSTUCK = "You should be unstuck!"
+LANG.UNSTUCK.BAD_SPAWNPOINT = "Error: The closest spawnpoint might get you stuck again. If it does, try to unstuck again."
+LANG.UNSTUCK.PLEASE_WAIT = "Please wait %d seconds between each unstuck attempt."
+LANG.UNSTUCK_NOT_ON_GROUND = "Not on ground, checking..."
+LANG.UNSTUCK.NOT_STUCK_JITTER = "You're not stuck. If you really are, wait until your prop no longer moves/jitters (try pressing ALT) then try again."
+LANG.UNSTUCK.NOT_STUCK_TOOBAD = "You're not stuck. If you really are, sorry, you'll have to wait until the end of the round."
+LANG.UNSTUCK.CANNOT_FIND_SPOT = "Cannot find a place to move you to, teleporting to closest spawnpoint."
+LANG.UNSTUCK.SPAWNPOINTS_DISABLED = "You were going to be teleported to a close spawnpoint, but this server disallows it outside of the hiding period. Sorry."
+
+LANG.PHEMENU.PLAYER.ph_cl_unstuck_key = "Key to try to unstuck"
+
+LANG.PHEMENU.ADMINS.ph_tauntpitch_allowed = "Allow players to use taunt pitch functionality"
+LANG.PHEMENU.ADMINS.ph_tauntpitch_min = "Minimum taunt pitch (default is 60)"
+LANG.PHEMENU.ADMINS.ph_tauntpitch_max = "Maximum taunt pitch (default is 180)"
+LANG.PHEMENU.ADMINS.ph_originalteambalance = "Use PH:E's original auto-balancing (disables all following team-related options)"
+LANG.PHEMENU.ADMINS.ph_originalteambalance_uncheck = "Uncheck the previous checkbox to access the advanced team balance options."
+LANG.PHEMENU.ADMINS.ph_huntercount = "Hunter count (0 = automatic)"
+LANG.PHEMENU.ADMINS.ph_rotateteams = "Disable shuffle mode and rotate players instead"
+LANG.PHEMENU.ADMINS.ResetRotateTeams_warning = "Restart rotations from the beginning (in case you've started them, stopped, then started again and the current rotation does not satisfy you):"
+LANG.PHEMENU.ADMINS.ResetRotateTeams = "Reset rotations"
+LANG.PHEMENU.ADMINS.ph_preventconsecutivehunting = "Prevent players from being a Hunter twice in a row (only works in shuffle mode)"
+LANG.PHEMENU.ADMINS.ForceHunterAsProp_warning = "Force a Hunter to be a Prop next time (only works in shuffle mode):"
+LANG.PHEMENU.ADMINS.ForceHunterAsProp_randomonly = "This action is only available in shuffle mode."
+LANG.PHEMENU.ADMINS.ForceHunterAsProp_nohunters = "[NO HUNTERS]"
+LANG.PHEMENU.ADMINS.ForceHunterAsProp_nohuntersmsg = "There are no hunters goddammit, it's written on the button."
+LANG.PHEMENU.ADMINS.ph_experimentalpropcollisions = "[EXPERIMENTAL] Less strict prop collisions (might prevent getting stuck), but sometimes gives a small hitbox to big props (doesn't affect bullets)"
+LANG.PHEMENU.ADMINS.ph_disabletpunstuckinround = "Disable last-resort unstuck teleportations to spawnpoints outside of the hiding phase"
+LANG.PHEMENU.ADMINS.ph_unstuck_waittime = "How much seconds must pass between each unstuck attempt"
+LANG.PHEMENU.ADMINS.ph_falldamage = "Enable fall damage"
+
+LANG.PHEMENU.ABOUT.ENHANCED_BY = "Enhanced by "
+
 
 -- Saving
 PHE.LANGUAGES[LANG.Code] = LANG
