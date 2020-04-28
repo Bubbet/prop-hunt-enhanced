@@ -437,7 +437,7 @@ function GM:PlayerUse(pl, ent)
 
 	end
 	]]
-	if ent:GetPhysicsObject():GetMass() > 30 then return false end
+	if (ent:GetPhysicsObject():GetMass() > 30) and string.find(ent:GetClass(), "prop") then return false end
 	-- Allow pickup?
 	if IsValid(ent) && (ent:GetClass() == "prop_physics" || ent:GetClass() == "prop_physics_multiplayer") && (GetConVar("ph_allow_prop_pickup"):GetInt() <= 0 || (GetConVar("ph_allow_prop_pickup"):GetInt() == 2 && pl:Team() != TEAM_HUNTERS)) then
 		return false
