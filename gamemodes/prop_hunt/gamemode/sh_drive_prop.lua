@@ -8,11 +8,10 @@ hook.Add("Move", "moveProp", function(ply,move)
 			if (ent:GetModel() == "models/player/kleiner.mdl" || ent:GetModel() == player_manager.TranslatePlayerModel(ply:GetInfo("cl_playermodel"))) then
 				ent:SetPos(move:GetOrigin())
 			end
-			locked = locked or false
 			-- Set angles
 			if !ply:GetPlayerLockedRot() then
-				if locked then
-					locked = false
+				if ply:GetRecentlyLocked() then
+					ply:SetRecentlyLocked(false)
 					ent:SetMoveType(MOVETYPE_NONE)
 					move:SetOrigin(ent:GetPos()+ Vector(0, 0, ent:OBBMins().z))
 				else
@@ -21,11 +20,11 @@ hook.Add("Move", "moveProp", function(ply,move)
 					ent:SetAngles(Angle(0,ang.y,0))
 				end
 			else
-				if not locked then
+				if not ply:GetRecentlyLocked() then
 					ent:SetMoveType(MOVETYPE_VPHYSICS)
 					ent:SetPos(move:GetOrigin() - Vector(0, 0, ent:OBBMins().z))
 				end
-				locked = true
+				ply:SetRecentlyLocked(true)
 				local phys = ent:GetPhysicsObject()
 				if (phys:IsValid()) then
 					phys:Wake()

@@ -291,6 +291,7 @@ function GM:PlayerExchangeProp(pl, ent)
 		if table.HasValue(PHE.BANNED_PROP_MODELS, ent:GetModel()) then
 			pl:ChatPrint("[PH: Enhanced] Notice: That prop has been banned from the server.")
 		elseif IsValid(ent:GetPhysicsObject()) && IsValid (pl.ph_prop) && (pl.ph_prop:GetModel() != ent:GetModel() || pl.ph_prop:GetSkin() != ent:GetSkin()) then
+			pl:SetRecentlyLocked(false)
 			local entphys = ent:GetPhysicsObject()
 			local ent_health = math.Clamp(entphys:GetVolume() / 250, 1, 200)
 			local new_health = math.Clamp((pl.ph_prop.health / pl.ph_prop.max_health) * ent_health, 1, 200)

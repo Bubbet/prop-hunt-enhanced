@@ -4,6 +4,8 @@ local Entity = FindMetaTable("Entity")
 if !Player then return end
 if !Entity then return end
 
+AccessorFunc(Player, "RecentlyLocked", "RecentlyLocked", FORCE_BOOL)
+
 -- Checks player hull to make sure it does not even stuck with the world/other objects.
 function Entity:GetPropSize()
 	local hullxymax = math.Round(math.Max(self:OBBMaxs().x-self:OBBMins().x, self:OBBMaxs().y-self:OBBMins().y))
