@@ -108,16 +108,18 @@ end
 
 -- Check collisions
 function CheckPropCollision(entA, entB)
+	local validA = IsValid(entA)
+	local validB = IsValid(entB)
 	-- Disable prop on prop collisions
 	if !GetConVar("ph_prop_collision"):GetBool() && (entA && entB && ((entA:IsPlayer() && entA:Team() == TEAM_PROPS && entB:IsValid() && entB:GetClass() == "ph_prop") || (entB:IsPlayer() && entB:Team() == TEAM_PROPS && entA:IsValid() && entA:GetClass() == "ph_prop"))) then
 		return false
 	end
 
-	if IsValid(entA) && IsValid(entB) && entA:IsPlayer() && entB:IsPlayer() then
+	if validA && validB && entA:IsPlayer() && entB:IsPlayer() then
 		return false
 	end
 
-	if IsValid(entA) && IsValid(entB) then
+	if validA && validB then
 		if not entA:IsPlayer() then
 			local succ, val = pcall(function() return entA:IsPlayerHolding() end)
 			if succ and val then return false end
@@ -128,9 +130,20 @@ function CheckPropCollision(entA, entB)
 		end
 	end
 
+	if (validA and entA:IsPlayer() and entA:GetPlayerLockedRot()) or (validB and entB:IsPlayer() and entB:GetPlayerLockedRot()) then
+		return false
+	end
+
 	-- Disable hunter on hunter collisions so we can allow bullets through them
-	if (IsValid(entA) && IsValid(entB) && (entA:IsPlayer() && entA:Team() == TEAM_HUNTERS && entB:IsPlayer() && entB:Team() == TEAM_HUNTERS)) then
+	if (validA && validB && (entA:IsPlayer() && entA:Team() == TEAM_HUNTERS && entB:IsPlayer() && entB:Team() == TEAM_HUNTERS)) then
 		return false
 	end
 end
 hook.Add("ShouldCollide", "CheckPropCollision", CheckPropCollision)
+
+function CheckStepSound(ply)
+	if IsValid(ply) and ply:Team() == TEAM_PROPS then
+		return true
+	end
+end
+hook.Add("PlayerFootstep", "CheckStepSound", CheckStepSound)
