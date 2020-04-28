@@ -291,7 +291,8 @@ function GM:PlayerExchangeProp(pl, ent)
 		if table.HasValue(PHE.BANNED_PROP_MODELS, ent:GetModel()) then
 			pl:ChatPrint("[PH: Enhanced] Notice: That prop has been banned from the server.")
 		elseif IsValid(ent:GetPhysicsObject()) && IsValid (pl.ph_prop) && (pl.ph_prop:GetModel() != ent:GetModel() || pl.ph_prop:GetSkin() != ent:GetSkin()) then
-			local ent_health = math.Clamp(ent:GetPhysicsObject():GetVolume() / 250, 1, 200)
+			local entphys = ent:GetPhysicsObject()
+			local ent_health = math.Clamp(entphys:GetVolume() / 250, 1, 200)
 			local new_health = math.Clamp((pl.ph_prop.health / pl.ph_prop.max_health) * ent_health, 1, 200)
 			pl.ph_prop.health = new_health
 
@@ -313,6 +314,7 @@ function GM:PlayerExchangeProp(pl, ent)
 			pl.ph_prop:PhysicsInit( SOLID_VPHYSICS )
 			pl.ph_prop:SetMoveType( MOVETYPE_VPHYSICS )
 			pl.ph_prop:SetSolid( SOLID_VPHYSICS )
+			pl.ph_prop:GetPhysicsObject():SetMass(entphys:GetMass())
 
 			pl:SetHealth(new_health)
 
@@ -434,7 +436,7 @@ function GM:PlayerUse(pl, ent)
 
 	end
 	]]
-
+	if ent:GetPhysicsObject():GetMass() > 30 then return false end
 	-- Allow pickup?
 	if IsValid(ent) && (ent:GetClass() == "prop_physics" || ent:GetClass() == "prop_physics_multiplayer") && (GetConVar("ph_allow_prop_pickup"):GetInt() <= 0 || (GetConVar("ph_allow_prop_pickup"):GetInt() == 2 && pl:Team() != TEAM_HUNTERS)) then
 		return false
