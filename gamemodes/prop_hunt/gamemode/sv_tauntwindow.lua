@@ -1,6 +1,6 @@
 -- Validity check to prevent some sort of spam
 local function IsDelayed(ply)
-	return ply:GetNWFloat("NextTauntTime") > CurTime()
+	return false --ply:GetNWFloat("NextTauntTime") > CurTime()
 end
 
 net.Receive("CL2SV_PlayThisTaunt", function(len, ply)

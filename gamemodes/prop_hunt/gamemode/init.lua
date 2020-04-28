@@ -332,23 +332,26 @@ function GM:PlayerExchangeProp(pl, ent)
 					pl:SetViewOffset(Vector(0, 0, hullMax.z))
 					pl:SetViewOffsetDucked(Vector(0, 0 , hullDuckMax.z))
 				end
+				if hullMax:LengthSqr() < 1500 then
+					pl:SetHull(hullMin, hullMax)
+					pl:SetHullDuck(hullDuckMin, hullDuckMax)
 
-				pl:SetHull(hullMin, hullMax)
-				pl:SetHullDuck(hullDuckMin, hullDuckMax)
-
-				net.Start("SetHull")
-					if GAMEMODE.ExperimentalPropCollisions then
-						net.WriteVector(hullMin)
-						net.WriteVector(hullMax)
-						net.WriteVector(hullDuckMax)
-					else
-						local hullXYMax = math.Round(math.Max(hullMax.x, hullMax.y))
-						net.WriteVector(hullMin)
-						net.WriteVector(Vector(hullXYMax, hullXYMax, hullMax.z))
-						net.WriteVector(Vector(hullXYMax, hullXYMax, hullDuckMax.z))
-					end
-					net.WriteInt(new_health,9)
-				net.Send(pl)
+					net.Start("SetHull")
+						if GAMEMODE.ExperimentalPropCollisions then
+							net.WriteVector(hullMin)
+							net.WriteVector(hullMax)
+							net.WriteVector(hullDuckMax)
+						else
+							local hullXYMax = math.Round(math.Max(hullMax.x, hullMax.y))
+							net.WriteVector(hullMin)
+							net.WriteVector(Vector(hullXYMax, hullXYMax, hullMax.z))
+							net.WriteVector(Vector(hullXYMax, hullXYMax, hullDuckMax.z))
+						end
+						net.WriteInt(new_health,9)
+					net.Send(pl)
+				else
+					pl:ResetHull()
+				end
 			else
 				local obbMin, obbMax = ent:OBBMins(), ent:OBBMaxs()
 				local hullXMin, hullYMin, hullZMin = obbMin.x, obbMin.y, obbMin.z
@@ -389,16 +392,20 @@ function GM:PlayerExchangeProp(pl, ent)
 					maxVector = Vector(hullXYMax, hullXYMax, math.Round(hullZAbs))
 					duckMaxVector = Vector(hullXMax, hullYMax, hullZDuckAbs)
 				end
+				local size = obbMax:LengthSqr()
+				if size < 1500 then
+					pl:SetHull(minVector, maxVector)
+					pl:SetHullDuck(minVector, duckMaxVector)
 
-				pl:SetHull(minVector, maxVector)
-				pl:SetHullDuck(minVector, duckMaxVector)
-
-				net.Start("SetHull")
-					net.WriteVector(minVector)
-					net.WriteVector(maxVector)
-					net.WriteVector(duckMaxVector)
-					net.WriteInt(new_health, 9)
-				net.Send(pl)
+					net.Start("SetHull")
+						net.WriteVector(minVector)
+						net.WriteVector(maxVector)
+						net.WriteVector(duckMaxVector)
+						net.WriteInt(new_health, 9)
+					net.Send(pl)
+				else
+					pl:ResetHull()
+				end
 			end
 
 		end

@@ -117,6 +117,17 @@ function CheckPropCollision(entA, entB)
 		return false
 	end
 
+	if IsValid(entA) && IsValid(entB) then
+		if not entA:IsPlayer() then
+			local succ, val = pcall(function() return entA:IsPlayerHolding() end)
+			if succ and val then return false end
+		end
+		if not entB:IsPlayer() then
+			local succ, val = pcall(function() return entB:IsPlayerHolding() end)
+			if succ and val then return false end
+		end
+	end
+
 	-- Disable hunter on hunter collisions so we can allow bullets through them
 	if (IsValid(entA) && IsValid(entB) && (entA:IsPlayer() && entA:Team() == TEAM_HUNTERS && entB:IsPlayer() && entB:Team() == TEAM_HUNTERS)) then
 		return false

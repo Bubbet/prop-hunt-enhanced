@@ -12,14 +12,19 @@ hook.Add("Move", "moveProp", function(ply,move)
 			-- Set angles
 			if !ply:GetPlayerLockedRot() then
 				if locked then
-					move:SetOrigin(ent:GetPos()+ Vector(0, 0, ent:OBBMins().z))
 					locked = false
+					ent:SetMoveType(MOVETYPE_NONE)
+					move:SetOrigin(ent:GetPos()+ Vector(0, 0, ent:OBBMins().z))
 				else
 					local ang = move:GetAngles()
 					ent:SetPos(move:GetOrigin() - Vector(0, 0, ent:OBBMins().z))
 					ent:SetAngles(Angle(0,ang.y,0))
 				end
 			else
+				if not locked then
+					ent:SetMoveType(MOVETYPE_VPHYSICS)
+					ent:SetPos(move:GetOrigin() - Vector(0, 0, ent:OBBMins().z))
+				end
 				locked = true
 				local phys = ent:GetPhysicsObject()
 				if (phys:IsValid()) then
