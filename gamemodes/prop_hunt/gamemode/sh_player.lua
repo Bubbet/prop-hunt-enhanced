@@ -31,7 +31,7 @@ function Player:getNextTauntTime(lastTauntTime)
 	lastTauntTime = lastTauntTime or CurTime()
 	local volume = 100000
 	if IsValid(self.ph_prop) then volume = self.ph_prop:GetPhysicsObject():GetVolume() end
-	return lastTauntTime + Lerp(math.Clamp(volume / 250, 100, 200)/200, GetConVar("ph_autotaunt_forsmall_delay"):GetInt(), GetConVar("ph_autotaunt_delay"):GetInt())
+	return lastTauntTime + Lerp(math.Clamp(volume / 250, 1, 200)/200, GetConVar("ph_autotaunt_forsmall_delay"):GetInt(), GetConVar("ph_autotaunt_delay"):GetInt())
 end
 
 function Player:TraceLineFromPlayer(endpos)

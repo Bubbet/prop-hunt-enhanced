@@ -2,7 +2,7 @@
 -- Props will autotaunt at specified intervals
 local isEnabled = false
 local isProp = false
-local delay = 45
+local delay = GetConVar("ph_autotaunt_delay"):GetInt()
 local started = false
 local timerID = "ph_autotaunt_timer"
 local teamCheckTimer = "ph_autotaunt_teamchecktimer"
@@ -16,10 +16,7 @@ local previousTime
 local tweenTime = 0
 
 local function TimeLeft()
-	local ply = LocalPlayer()
-	local nextTauntTime = ply:GetNWFloat("NextTauntTime")
-	local currentTime = CurTime()
-	return nextTauntTime - currentTime
+	return LocalPlayer():GetNWFloat("NextTauntTime") - CurTime()
 end
 
 -- a: amplitude
@@ -64,6 +61,7 @@ local function AutoTauntPaint()
 	draw.RoundedBox(5, x, y, w, h, Color(0, 0, 0, 200))
 	draw.RoundedBox(5, x + 5, y + 5, (w - 10) * percentage, h - 10, Color(200, 0, 0, 200))
 	draw.DrawText(txt, "HunterBlindLockFont", x + 70, ScrH() - 57, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
+	draw.DrawText("Auto-taunt delay is based on prop size.", "HunterBlindLockFont", x + 70, ScrH() - 37, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER)
 end
 hook.Add("HUDPaint", "PH_AutoTauntPaint", AutoTauntPaint)
 
