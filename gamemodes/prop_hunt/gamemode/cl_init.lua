@@ -296,26 +296,28 @@ end)
 function PHEDrawPropselectHalos()
 
 		-- Something to tell if the prop is selectable
-	if GetConVar("ph_cl_halos"):GetBool() && LocalPlayer():Team() == TEAM_PROPS && LocalPlayer():Alive() then
-		local trace = {}
-		-- fix for smaller prop size. They should stay horizontal rather than looking straight down.
-		if cHullz < 24 then
-			trace.start = LocalPlayer():EyePos() + Vector(0, 0, cHullz + (24-cHullz))
-			trace.endpos = LocalPlayer():EyePos() + Vector(0, 0, cHullz + (24-cHullz)) + LocalPlayer():EyeAngles():Forward() * 100
-		elseif cHullz > 84 then
-			trace.start = LocalPlayer():EyePos() + Vector(0, 0, cHullz - 84)
-			trace.endpos = LocalPlayer():EyePos() + Vector(0, 0, cHullz - 84) + LocalPlayer():EyeAngles():Forward() * 300
-		else
-			trace.start = LocalPlayer():EyePos() + Vector(0, 0, 8)
-			trace.endpos = LocalPlayer():EyePos() + Vector(0, 0, 8) + LocalPlayer():EyeAngles():Forward() * 100
-		end
-		trace.filter = ents.FindByClass("ph_prop")
+	if GetConVar("ph_cl_halos"):GetBool() && LocalPlayer():Team() == TEAM_PROPS then
+		if LocalPlayer():Alive() then
+			local trace = {}
+			-- fix for smaller prop size. They should stay horizontal rather than looking straight down.
+			if cHullz < 24 then
+				trace.start = LocalPlayer():EyePos() + Vector(0, 0, cHullz + (24-cHullz))
+				trace.endpos = LocalPlayer():EyePos() + Vector(0, 0, cHullz + (24-cHullz)) + LocalPlayer():EyeAngles():Forward() * 100
+			elseif cHullz > 84 then
+				trace.start = LocalPlayer():EyePos() + Vector(0, 0, cHullz - 84)
+				trace.endpos = LocalPlayer():EyePos() + Vector(0, 0, cHullz - 84) + LocalPlayer():EyeAngles():Forward() * 300
+			else
+				trace.start = LocalPlayer():EyePos() + Vector(0, 0, 8)
+				trace.endpos = LocalPlayer():EyePos() + Vector(0, 0, 8) + LocalPlayer():EyeAngles():Forward() * 100
+			end
+			trace.filter = ents.FindByClass("ph_prop")
 
-		local trace2 = util.TraceLine(trace)
-		if trace2.Entity && trace2.Entity:IsValid() && table.HasValue(PHE.USABLE_PROP_ENTITIES, trace2.Entity:GetClass()) then
-			local ent_table = {}
-			table.insert(ent_table, trace2.Entity)
-			halo.Add(ent_table, Color(20, 250, 0), 1.2, 1.2, 1, true, true)
+			local trace2 = util.TraceLine(trace)
+			if trace2.Entity && trace2.Entity:IsValid() && table.HasValue(PHE.USABLE_PROP_ENTITIES, trace2.Entity:GetClass()) then
+				local ent_table = {}
+				table.insert(ent_table, trace2.Entity)
+				halo.Add(ent_table, Color(20, 250, 0), 1.2, 1.2, 1, true, true)
+			end
 		end
 		halo.Add(ents.FindByClass("ph_prop"), Color(0, 20, 250), 1.2, 1.2, 1, true, false)
 	end
