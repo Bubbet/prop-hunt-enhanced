@@ -32,7 +32,7 @@ hook.Add("Move", "moveProp", function(ply,move)
                     local entpos = ent:GetPos()
                     local playerpos = ply:GetPos()
                     local dist = entpos:DistToSqr(playerpos)
-                    if dist > 200^2 then
+                    if dist > GetConVar("ph_prop_roam_radius"):GetInt()^2 then
                         move:SetOrigin(ent:GetPos()+ Vector(0, 0, ent:OBBMins().z))
                     end
                 end

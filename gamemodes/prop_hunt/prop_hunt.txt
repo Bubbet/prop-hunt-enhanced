@@ -275,6 +275,15 @@
 			"type"		"CheckBox"
 			"default"	"1"
 		}
+
+		25
+		{
+		    "name"      "ph_prop_roam_radius"
+		    "text"      "Prop Roam Radius"
+		    "help"      "Radius the props are allowed to roam when physical"
+		    "type"      "Numeric"
+		    "default"   "200"
+		}
 	}
 
 }

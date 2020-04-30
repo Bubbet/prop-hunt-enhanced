@@ -134,6 +134,11 @@ function CheckPropCollision(entA, entB)
 		return false
 	end
 
+	if  (validA and entA:GetOwner():IsPlayer() and entA:GetOwner():Team() == TEAM_PROPS and (entA:GetModel() == "models/player/kleiner.mdl" or entA:GetModel() == player_manager.TranslatePlayerModel(entA:GetOwner():GetInfo("cl_playermodel")))) and
+		(validB and entB:GetOwner():IsPlayer() and entB:GetOwner():Team() == TEAM_PROPS and (entB:GetModel() == "models/player/kleiner.mdl" or entB:GetModel() == player_manager.TranslatePlayerModel(entB:GetOwner():GetInfo("cl_playermodel")))) then
+		return false
+	end
+
 	-- Disable hunter on hunter collisions so we can allow bullets through them
 	if (validA and validB and (entA:IsPlayer() and entA:Team() == TEAM_HUNTERS and entB:IsPlayer() and entB:Team() == TEAM_HUNTERS)) then
 		return false
