@@ -1098,7 +1098,7 @@ function GM:PlayerUse(pl, ent)
 
 	pl.last_door_time = CurTime()
 
-	if pl:Team() == TEAM_PROPS then
+	if pl:Team() == TEAM_PROPS and false then -- DISABLED because code in PlayerPressedKey does not work
 		if ent and ent:IsValid() and table.HasValue(PHE.USABLE_PROP_ENTITIES, ent:GetClass()) then
 			return false
 		end
@@ -1143,7 +1143,7 @@ function PlayerPressedKey(pl, key)
 						pl.UseTime = CurTime() + 1
 					end
 				end
-				if key == IN_USE then
+				if key == IN_USE and false then -- DISABLED because pickup isnt working in this scope I'll have to try moving it elsewhere
 					if pl.UseTime <= CurTime() then
 						if not pl:IsHoldingEntity() then
 							--	TODO fix heavy props being lifted

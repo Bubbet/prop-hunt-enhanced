@@ -1,44 +1,10 @@
-# Wolvin's - Prop Hunt: ENHANCED v.16 Rev. A
-
-![Prop Hunt: Enhanced Logo](https://i.ibb.co/7Yq3PhX/image.png "Prop Hunt: Enhanced v.15")
-
-## Base Information
-**Version: 16, Revision: A, Release Type: PreRelease**
-
-Prop Hunt: Enhanced is now mantained by [GFL](https://www.gflclan.com) clan, as Wolvindra, creator of PHE is no longer able to mantain/update the gamemode by himself.
-
-[Join our discord](https://discord.gg/eyPAZ4s) to discuss bugs, features, recomendations and get notified on changes and updates.
+![Prop Hunt: Physical Logo](https://i.ibb.co/7Yq3PhX/image.png "Prop Hunt: Physical v.16")
 
 ### Main gamemode Description
-Prop Hunt: Enhanced is an enhanced version of Classic original **Prop Hunt** Gamemode. The gamemode is focused to be always maintained and fully customizable with many things.
-The gamemode also includes several many major changes including the HUD, the code optimisation, Player skins, and other kind of additional features.
-
-The gamemode was contributted to the old Classic Prop Hunt as for the fixes on march 2015 update (which completely broken) with the viewmodel fix additions. The classic version may no longer be maintained anymore.
-
-
-### Available Links & Public Server Tests
-
-#### Available Servers
-- Soup Network: 103.193.80.135:28380
-- GFL Clan Server: 208.103.169.70:27030
-
-#### Links
-
-[**Workshop Version**](https://steamcommunity.com/sharedfiles/filedetails/?id=1754658833)
+Prop Hunt: Physical is a forked version of **Prop Hunt** Enhanced (Plus). The main differences being: You are now capable of "Becoming Physical", meaning enabling prop physics to allow for a more immersive hunting experience instead of walking over props to check them.
+You're also able to pick up disguised props. This makes the gamemode quite a bit more difficult for the hunters, so it is recommended to have auto-taunt on. Bringing us into another feature difference, auto taunt delay is based on prop size, and has a upper and lower range(cvars) to make smaller props a little less broken.
+Another minor change is removing the ability to transform with e, that is done exclusively with left click now, as you can move props around you while physical to affect your surroundings and make your hiding spot better.
 
 ## Required Addons
 * ULX Admin Mod. ( Workshop or Legacy Download: http://ulyssesmod.net/downloads.php )
 * (Optional) M9K/TFA Base. You can optionally subscribe the M9K weapon base if you wish to use custom weapon base for bonus weapon, otherwise will use from default sandbox weapon base.
-
-## Donate
-Currently, the project is not mantained by Wolvindra, but you can still donate to him [here](https://prophunt.wolvindra.net/?go=donate).
-
-## Reporting an Issue
-
-### Reporting game issue (Bugs/Glitches)
-Please provide information with detail so we know what's the actual problem that can occurs on your side. This issue page is not a place for asking help.
-
-[Or you can join our discord instead.](https://discord.gg/eyPAZ4s)
-
-### Community Discussion Thread
-If you wish to use help, please [open a discussion thread from workshop here](http://steamcommunity.com/sharedfiles/filedetails/discussions/1754658833).
