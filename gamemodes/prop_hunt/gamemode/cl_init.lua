@@ -319,7 +319,7 @@ function PHEDrawPropselectHalos()
 				halo.Add(ent_table, Color(20, 250, 0), 1.2, 1.2, 1, true, true)
 			end
 		end
-		halo.Add(ents.FindByClass("ph_prop"), Color(0, 20, 250), 1.2, 1.2, 1, true, false)
+		halo.Add(ents.FindByClass("ph_prop"), Color(0, 20, 250), 1.2, 1.2, 1, true, GetConVar("ph_prop_halo_through_walls"):GetBool())
 	end
 end
 hook.Add("PreDrawHalos", "PHEDrawPropselectHalos", PHEDrawPropselectHalos)

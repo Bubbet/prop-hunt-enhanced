@@ -45,6 +45,7 @@ local blind_time = CreateConVar("ph_hunter_blindlock_time", "30", { FCVAR_SERVER
 local round_time = CreateConVar("ph_round_time", "300", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Time (in seconds) for each rounds.")
 local round_map	= CreateConVar("ph_rounds_per_map", "10", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Numbers played on a map (Default: 10)")
 local prop_roam_radius	= CreateConVar("ph_prop_roam_radius", "200", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Radius props are allowed to roam when physical. (Default: 200)")
+local prop_halo_through_walls = CreateConVar("ph_prop_halo_through_walls", "0", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Whether you can see the prop halos of your teammates through walls as a prop")
 
 -- Round Control
 local wait_pl	= CreateConVar( "ph_waitforplayers", "1", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE, FCVAR_NOTIFY }, "Should we wait for players for proper round?" )

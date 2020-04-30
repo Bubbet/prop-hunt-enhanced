@@ -284,6 +284,15 @@
 		    "type"      "Numeric"
 		    "default"   "200"
 		}
+
+		26
+		{
+		    "name"		"ph_prop_halo_through_walls"
+            "text"		"Prop Halo Through Walls"
+            "help"		"Whether you can see the prop halos of your teammates through walls as a prop"
+            "type"		"CheckBox"
+            "default"	"1"
+		}
 	}
 
 }

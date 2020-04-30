@@ -7,6 +7,7 @@ Prop Hunt: Physical is a forked version of **Prop Hunt** Enhanced (Plus). The ma
 You're also able to pick up disguised props. This makes the gamemode quite a bit more difficult for the hunters, so it is recommended to have auto-taunt on.
  - Bringing us into another feature difference, auto taunt delay is based on prop size, and has a upper and lower range(cvars) to make smaller props a little less broken.
  - Another minor change is removing the ability to transform with e, that is done exclusively with left click now, as you can move props around you while physical to affect your surroundings and make your hiding spot better.
+ - Props now have a halo around them to help identify yourself when physical, this also displays for your teammates as props
 
 ## Required Addons
 * ULX Admin Mod. ( Workshop or Legacy Download: http://ulyssesmod.net/downloads.php )
