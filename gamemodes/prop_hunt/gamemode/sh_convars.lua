@@ -52,7 +52,7 @@ local wait_pl_min = CreateConVar( "ph_min_waitforplayers", "1", { FCVAR_SERVER_C
 -- Verbose mode & Function
 local verbose	= CreateConVar("ph_print_verbose", "0", { FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED, FCVAR_ARCHIVE }, "Developer Verbose. Some printed messages will only appear if this is enabled.")
 function printVerbose(text)
-	if GetConVar("ph_print_verbose"):GetBool() && text then
+	if GetConVar("ph_print_verbose"):GetBool() and text then
 		print(tostring(text))
 	end
 end

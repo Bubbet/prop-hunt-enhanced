@@ -72,7 +72,7 @@ function GM:CalcView(pl, origin, angles, fov)
 	view.fov = fov
 
 	-- Give the active weapon a go at changing the viewmodel position 
-	if pl:Team() == TEAM_PROPS && pl:Alive() then
+	if pl:Team() == TEAM_PROPS and pl:Alive() then
 		if GetConVar("ph_prop_camera_collisions"):GetBool() then
 			local trace = {}
 
@@ -103,9 +103,9 @@ function GM:CalcView(pl, origin, angles, fov)
 				view.origin = origin + Vector(0, 0, 8) + (angles:Forward() * -80)
 			end
 		end
-	elseif pl:Team() == TEAM_HUNTERS && pl:Alive() then
+	elseif pl:Team() == TEAM_HUNTERS and pl:Alive() then
 	 	local wep = pl:GetActiveWeapon()
-	 	if wep && wep != NULL then
+	 	if wep and wep ~= NULL then
 	 		local func = wep.GetViewModelPosition
 	 		if func then
 	 			view.vm_origin, view.vm_angles = func(wep, origin * 1, angles * 1)
@@ -144,9 +144,9 @@ local crosshair = Material("vgui/hud_crosshair")
 -- Draw round timeleft and hunter release timeleft
 function HUDPaint()
 	-- Draw player texts
-	if GetConVar("ph_enable_plnames"):GetBool() && GetConVar("ph_cl_pltext"):GetBool() && LocalPlayer():Team() != TEAM_SPECTATOR then
+	if GetConVar("ph_enable_plnames"):GetBool() and GetConVar("ph_cl_pltext"):GetBool() and LocalPlayer():Team() ~= TEAM_SPECTATOR then
 		for _, pl in pairs(player.GetAll()) do
-			if pl != LocalPlayer() && (pl && pl:IsValid() && pl:Alive() && pl:Team() == LocalPlayer():Team()) then
+			if pl ~= LocalPlayer() and (pl and pl:IsValid() and pl:Alive() and pl:Team() == LocalPlayer():Team()) then
 				local addvector = Vector(0, 0, math.Clamp(pl:EyePos():Distance(LocalPlayer():EyePos()) * 0.04, 16, 64))
 				-- todo: text will disappear in a specified distance.
 				draw.DrawText(pl:Name() .. " (" .. pl:Health() .. "%)", "TargetIDSmall", (pl:EyePos() + addvector):ToScreen().x, (pl:EyePos() + addvector):ToScreen().y, team.GetColor(pl:Team()), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
@@ -158,7 +158,7 @@ function HUDPaint()
 	if GetGlobalBool("InRound", false) then
 		local blindlock_time_left = (GetConVar("ph_hunter_blindlock_time"):GetInt() - (CurTime() - GetGlobalFloat("RoundStartTime", 0))) + 1
 
-		if blindlock_time_left < 1 && blindlock_time_left > -6 then
+		if blindlock_time_left < 1 and blindlock_time_left > -6 then
 			blindlock_time_left_msg = PHE.LANG.HUD.BLINDEND
 		elseif blindlock_time_left > 0 then
 			blindlock_time_left_msg = string.format(PHE.LANG.HUD.BLINDTIME, string.ToMinutesSeconds(blindlock_time_left))
@@ -176,7 +176,7 @@ function HUDPaint()
 	end
 
 	-- Draw Lucky Balls Icon
-	if GetConVar("cl_enable_luckyballs_icon"):GetBool() && LocalPlayer():Team() == TEAM_HUNTERS then
+	if GetConVar("cl_enable_luckyballs_icon"):GetBool() and LocalPlayer():Team() == TEAM_HUNTERS then
 		local offset = Vector( 0, 0, 45 )
 
 		local w = ScrW()
@@ -190,7 +190,7 @@ function HUDPaint()
 
 			if LocalPlayer():IsLineOfSightClear(ent) then
 
-				if ((poscr.x > 32 && poscr.x < (w-43)) && (poscr.y > 32 && poscr.y < (h-38))) then
+				if ((poscr.x > 32 and poscr.x < (w-43)) and (poscr.y > 32 and poscr.y < (h-38))) then
 					surface.SetDrawColor(255,255,255,255)
 					surface.SetTexture(surface.GetTextureID(mat))
 					surface.DrawTexturedRect( poscr.x-32, poscr.y, 64, 64 )
@@ -209,7 +209,7 @@ function HUDPaint()
 	end
 
 	-- Draw Devil Ball Icon
-	if GetConVar("cl_enable_devilballs_icon"):GetBool() && LocalPlayer():Team() == TEAM_PROPS then
+	if GetConVar("cl_enable_devilballs_icon"):GetBool() and LocalPlayer():Team() == TEAM_PROPS then
 		local offset = Vector( 0, 0, 35 )
 
 		local w = ScrW()
@@ -223,7 +223,7 @@ function HUDPaint()
 
 			if LocalPlayer():IsLineOfSightClear(ent) then
 
-				if ((poscr.x > 32 && poscr.x < (w-43)) && (poscr.y > 32 && poscr.y < (h-38))) then
+				if ((poscr.x > 32 and poscr.x < (w-43)) and (poscr.y > 32 and poscr.y < (h-38))) then
 					surface.SetDrawColor(255,255,255,255)
 					surface.SetTexture(surface.GetTextureID(dmat))
 					surface.DrawTexturedRect( poscr.x-32, poscr.y, 64, 64 )
@@ -242,7 +242,7 @@ function HUDPaint()
 	end
 
 	-- Prop Crosshair
-	if GetConVar("ph_show_custom_crosshair"):GetBool() && LocalPlayer():Team() == TEAM_PROPS && LocalPlayer():Alive() && !crosshair:IsError () then
+	if GetConVar("ph_show_custom_crosshair"):GetBool() and LocalPlayer():Team() == TEAM_PROPS and LocalPlayer():Alive() and not crosshair:IsError () then
 		local color
 		local trace = {}
 		if cHullz < 24 then
@@ -258,7 +258,7 @@ function HUDPaint()
 		trace.filter = ents.FindByClass("ph_prop")
 
 		local trace2 = util.TraceLine(trace)
-		if trace2.Entity && trace2.Entity:IsValid() && table.HasValue(PHE.USABLE_PROP_ENTITIES, trace2.Entity:GetClass()) then
+		if trace2.Entity and trace2.Entity:IsValid() and table.HasValue(PHE.USABLE_PROP_ENTITIES, trace2.Entity:GetClass()) then
 			color = Color(10,255,10,255)
 		else
 			color = Color(255,255,255,255)
@@ -280,7 +280,7 @@ hook.Add("HUDPaint", "PH_HUDPaint", HUDPaint)
 -- After the player has been drawn
 function PH_PostPlayerDraw(pl)
 	-- Draw a line on hunters
-	if GetConVar("ph_cl_spec_hunter_line"):GetBool() && (!LocalPlayer():Alive() || LocalPlayer():Team() == TEAM_SPECTATOR) && IsValid(pl) && pl:Alive() && pl:Team() == TEAM_HUNTERS then
+	if GetConVar("ph_cl_spec_hunter_line"):GetBool() and (not LocalPlayer():Alive() or LocalPlayer():Team() == TEAM_SPECTATOR) and IsValid(pl) and pl:Alive() and pl:Team() == TEAM_HUNTERS then
 		render.DrawLine(pl:GetShootPos(), pl:GetEyeTrace().HitPos, team.GetColor(pl:Team()), true)
 		render.SetMaterial(MAT_LASERDOT)
 		render.DrawSprite(pl:GetEyeTrace().HitPos, 8, 8, team.GetColor(pl:Team()))
@@ -296,7 +296,7 @@ end)
 function PHEDrawPropselectHalos()
 
 		-- Something to tell if the prop is selectable
-	if GetConVar("ph_cl_halos"):GetBool() && LocalPlayer():Team() == TEAM_PROPS then
+	if GetConVar("ph_cl_halos"):GetBool() and LocalPlayer():Team() == TEAM_PROPS then
 		if LocalPlayer():Alive() then
 			local trace = {}
 			-- fix for smaller prop size. They should stay horizontal rather than looking straight down.
@@ -313,7 +313,7 @@ function PHEDrawPropselectHalos()
 			trace.filter = ents.FindByClass("ph_prop")
 
 			local trace2 = util.TraceLine(trace)
-			if trace2.Entity && trace2.Entity:IsValid() && table.HasValue(PHE.USABLE_PROP_ENTITIES, trace2.Entity:GetClass()) then
+			if trace2.Entity and trace2.Entity:IsValid() and table.HasValue(PHE.USABLE_PROP_ENTITIES, trace2.Entity:GetClass()) then
 				local ent_table = {}
 				table.insert(ent_table, trace2.Entity)
 				halo.Add(ent_table, Color(20, 250, 0), 1.2, 1.2, 1, true, true)
@@ -327,7 +327,7 @@ hook.Add("PreDrawHalos", "PHEDrawPropselectHalos", PHEDrawPropselectHalos)
 -- Called every client frame
 function GM:Think()
 	-- Prop light
-	if client_prop_light && LocalPlayer() && LocalPlayer():IsValid() && LocalPlayer():Alive() && LocalPlayer():Team() == TEAM_PROPS then
+	if client_prop_light and LocalPlayer() and LocalPlayer():IsValid() and LocalPlayer():Alive() and LocalPlayer():Team() == TEAM_PROPS then
 		local prop_light = DynamicLight(LocalPlayer():EntIndex())
 		if prop_light then
 			prop_light.pos = LocalPlayer():GetPos()
@@ -349,7 +349,7 @@ end
 local tutormat = Material ("vgui/hud_control_help.png")
 local curshow = 0
 net.Receive("PH_ShowTutor", function()
-	if GetConVar("ph_show_tutor_control"):GetBool() && LocalPlayer():Alive() && !tutormat:IsError () && curshow <= 2 then
+	if GetConVar("ph_show_tutor_control"):GetBool() and LocalPlayer():Alive() and not tutormat:IsError () and curshow <= 2 then
 
 			local xNotify = vgui.Create( "DNotify" )
 			xNotify:SetPos( ScrW() - 300 , 60 )
@@ -385,7 +385,7 @@ end)
 
 -- Resets the player hull
 net.Receive("ResetHull", function()
-	if LocalPlayer() && LocalPlayer():IsValid() then
+	if LocalPlayer() and LocalPlayer():IsValid() then
 		LocalPlayer():ResetHull()
 		cHullz = 64
 	end

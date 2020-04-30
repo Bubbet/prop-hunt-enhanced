@@ -6,7 +6,7 @@ end
 net.Receive("CL2SV_PlayThisTaunt", function(len, ply)
 	local snd = net.ReadString()
 
-	if IsValid(ply) && !IsDelayed(ply) then
+	if IsValid(ply) and not IsDelayed(ply) then
 		if file.Exists("sound/" .. snd, "GAME") then
 			
 

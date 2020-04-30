@@ -10,15 +10,15 @@
 
 local function CheckConVar(cvar)
 	if cvar == nil then return false end
-	if cvar != nil then return true end
+	if cvar ~= nil then return true end
 	if IsValid(cvar) then return true end
 	return false
 end
 
-if CheckConVar(GetConVar("DebugM9K")) or (CheckConVar(GetConVar("sv_tfa_conv_m9konvert")) && GetConVar("sv_tfa_conv_m9konvert"):GetBool()) then -- check if M9K or TFA is Exists on server. otherwise will use from Default base instead.
+if CheckConVar(GetConVar("DebugM9K")) or (CheckConVar(GetConVar("sv_tfa_conv_m9konvert")) and GetConVar("sv_tfa_conv_m9konvert"):GetBool()) then -- check if M9K or TFA is Exists on server. otherwise will use from Default base instead.
 
 	SWEP.Gun = ("wlv_bren")
-	if (GetConVar(SWEP.Gun.."_allowed")) != nil then
+	if (GetConVar(SWEP.Gun.."_allowed")) ~= nil then
 		if not (GetConVar(SWEP.Gun.."_allowed"):GetBool()) then 
 			SWEP.Base = "bobs_blacklisted" 
 			SWEP.PrintName = SWEP.Gun 
@@ -137,12 +137,12 @@ if CheckConVar(GetConVar("DebugM9K")) or (CheckConVar(GetConVar("sv_tfa_conv_m9k
 	if GetConVar("M9KDefaultClip") == nil then
 		print("M9KDefaultClip is missing! You may have hit the lua limit!")
 	else
-		if GetConVar("M9KDefaultClip"):GetInt() != -1 then
+		if GetConVar("M9KDefaultClip"):GetInt() ~= -1 then
 			SWEP.Primary.DefaultClip = SWEP.Primary.ClipSize * GetConVar("M9KDefaultClip"):GetInt()
 		end
 	end
 
-	if GetConVar("M9KUniqueSlots") != nil then
+	if GetConVar("M9KUniqueSlots") ~= nil then
 		if not (GetConVar("M9KUniqueSlots"):GetBool()) then 
 			SWEP.SlotPos = 3
 		end
@@ -202,7 +202,7 @@ else
 
 	function SWEP:PrimaryAttack()
 
-		if (!self:CanPrimaryAttack()) then 
+		if (not self:CanPrimaryAttack()) then
 			return
 		end
 

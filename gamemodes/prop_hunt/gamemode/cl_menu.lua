@@ -96,7 +96,7 @@ function ph_BaseMainWindow(ply, cmd, args)
 			local txt = vgui.Create("DLabel")
 			txt:SetSize(panel:GetColWide(),panel:GetRowHeight())
 			txt:SetText(text)
-			if !data then
+			if not data then
 				txt:SetFont("HudHintTextLarge")
 			else
 				txt:SetFont(data)
@@ -200,7 +200,7 @@ function ph_BaseMainWindow(ply, cmd, args)
 
 		-- Mute Functions
 		if typ == "mute" then
-			if type(data) == "Player" && IsValid(data) then
+			if type(data) == "Player" and IsValid(data) then
 				local ply = data
 
 				local pnl = vgui.Create("DPanel")
@@ -232,10 +232,10 @@ function ph_BaseMainWindow(ply, cmd, args)
 				end
 
 				button.DoClick = function()
-					if !IsValid(ply) then return end
+					if not IsValid(ply) then return end
 					local mute = ply:IsMuted()
-					ply:SetMuted(!mute)
-					imagebtn:SetImage(Ph:GetMutedStateIcon(!mute))
+					ply:SetMuted(not mute)
+					imagebtn:SetImage(Ph:GetMutedStateIcon(not mute))
 				end
 
 				if ply == LocalPlayer() then
@@ -645,14 +645,14 @@ function ph_BaseMainWindow(ply, cmd, args)
 			local hunterTbls = {}
 			local tmpTable = {}
 			for ix, plyr in ipairs(team.GetPlayers(TEAM_HUNTERS)) do
-				if ix > 6 && ix % 6 == 1 then 
+				if ix > 6 and ix % 6 == 1 then
 					table.insert(hunterTbls, tmpTable)
 					tmpTable = {}
 				end
 
 				table.insert(tmpTable, {
 					plyr:GetName(), function(self)
-						if GetConVar("ph_autoteambalance"):GetBool() && !GetConVar("ph_rotateteams"):GetBool() then
+						if GetConVar("ph_autoteambalance"):GetBool() and not GetConVar("ph_rotateteams"):GetBool() then
 							net.Start("ForceHunterAsProp")
 							net.WriteUInt(plyr:UserID(), 16)
 							net.SendToServer()
@@ -704,7 +704,7 @@ function ph_BaseMainWindow(ply, cmd, args)
 		Ph:CreateVGUIType("ph_min_waitforplayers", "slider", { min = 1, max = game.MaxPlayers(), init = GetConVar("ph_min_waitforplayers"):GetInt(), dec = 0, kind = "SERVER" }, grid, PHE.LANG.PHEMENU.ADMINS.ph_min_waitforplayers)
 		Ph:CreateVGUIType("", "label", false, grid, PHE.LANG.PHEMENU.ADMINS.TAUNTMODES)
 		Ph:CreateVGUIType("", "btn", {max = 2, wide = 180, textdata = {
-			[1] = {PHE.LANG.PHEMENU.ADMINS[ "TAUNTMODE" .. (GetConVar("ph_enable_custom_taunts"):GetInt() || 0)],
+			[1] = {PHE.LANG.PHEMENU.ADMINS[ "TAUNTMODE" .. (GetConVar("ph_enable_custom_taunts"):GetInt() or 0)],
 			function(self)
 				local CusTauntConvar = {
 					[0] = PHE.LANG.PHEMENU.ADMINS.TAUNTMODE0,
@@ -734,7 +734,7 @@ function ph_BaseMainWindow(ply, cmd, args)
 				end
 			end},
 			[2] = {PHE.LANG.PHEMENU.ADMINS.TAUNTSOPEN, function(self)
-				if !LocalPlayer():Alive() then
+				if not LocalPlayer():Alive() then
 					print("You must do this action when you are alive!")
 					frm:Close()
 				else

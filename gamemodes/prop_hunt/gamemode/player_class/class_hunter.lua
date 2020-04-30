@@ -36,7 +36,7 @@ end
 
 -- Called when player spawns with this class
 function CLASS:OnSpawn(pl)
-	if !pl:IsValid() then return end
+	if not pl:IsValid() then return end
 
 	pl:SetupHands()
 	pl:SetCustomCollisionCheck(true)
@@ -78,7 +78,7 @@ end
 
 -- Hands
 function CLASS:GetHandsModel()
-	if !GetConVar("ph_use_custom_plmodel"):GetBool() then
+	if not GetConVar("ph_use_custom_plmodel"):GetBool() then
 		return { model = "models/weapons/c_arms_combine.mdl", skin = 1, body = "0100000" }
 	end
 end

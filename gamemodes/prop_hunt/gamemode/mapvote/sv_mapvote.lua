@@ -50,37 +50,37 @@ end
 
 local conv = {
 	["mv_maplimit"]		= function(cvar,old,new)
-		if new && (new != nil || new != "") then
+		if new and (new ~= nil or new ~= "") then
 			MapVote.Config.MapLimit = tonumber(new)
 		end
 	end,
 	["mv_timelimit"]	= function(cvar,old,new)
-		if new && (new != nil || new != "") then
+		if new and (new ~= nil or new ~= "") then
 			MapVote.Config.TimeLimit = tonumber(new)
 		end
 	end,
 	["mv_allowcurmap"]	= function(cvar,old,new)
-		if new && (new != nil || new != "") then
+		if new and (new ~= nil or new ~= "") then
 			MapVote.Config.AllowCurrentMap = tobool(new)
 		end
 	end,
 	["mv_cooldown"]		= function(cvar,old,new)
-		if new && (new != nil || new != "") then
+		if new and (new ~= nil or new ~= "") then
 			MapVote.Config.EnableCooldown = tobool(new)
 		end
 	end,
 	["mv_mapbeforerevote"]	= function(cvar,old,new)
-		if new && (new != nil || new != "") then
+		if new and (new ~= nil or new ~= "") then
 			MapVote.Config.MapsBeforeRevote = tobool(new)
 		end
 	end,
 	["mv_rtvcount"]		= function(cvar,old,new)
-		if new && (new != nil || new != "") then
+		if new and (new ~= nil or new ~= "") then
 			MapVote.Config.RTVPlayerCount = tonumber(new)
 		end
 	end,
 	["mv_mapprefix"]	= function(cvar,old,new)
-		if new && (new != nil || new != "") then
+		if new and (new ~= nil or new ~= "") then
 			MapVote.Config.MapPrefixes = string.Explode(",", new:lower())
 		end
 	end
@@ -148,7 +148,7 @@ function MapVote.Start(length, current, limit, prefix)
     
 	local maps = {}
 	
-	if GetConVar("mv_use_ulx_votemaps"):GetBool() && ulxmap ~= false then
+	if GetConVar("mv_use_ulx_votemaps"):GetBool() and ulxmap ~= false then
 		for _,map in pairs(ulxmap) do
 			table.insert(maps, map..".bsp")
 		end

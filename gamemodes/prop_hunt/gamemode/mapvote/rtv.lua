@@ -55,7 +55,7 @@ hook.Add( "PlayerDisconnected", "Remove RTV", function( ply )
 	end
 
 	timer.Simple( 0.1, function()
-		if (#player.GetAll() < 1 && !GetConVar("mv_change_when_no_player"):GetBool()) then
+		if (#player.GetAll() < 1 and not GetConVar("mv_change_when_no_player"):GetBool()) then
 			print("MapVote: There is no player to force change map...")
 		else
 			if RTV.ShouldChange() then
@@ -96,7 +96,7 @@ function RTV.StartVote( ply )
 
 	local can, err = RTV.CanVote(ply)
 
-	if !can then
+	if not can then
 		ply:PrintMessage( HUD_PRINTTALK, err )
 		return
 	end

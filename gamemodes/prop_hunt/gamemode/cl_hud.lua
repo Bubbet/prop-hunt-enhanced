@@ -90,7 +90,7 @@ local bar = {
 }
 
 hook.Add("HUDShouldDraw", "PHE.ShouldHideHUD", function(hudname)
-	if GetConVar("ph_hud_use_new"):GetBool() && !matw:IsError () && hide[hudname] then
+	if GetConVar("ph_hud_use_new"):GetBool() and not matw:IsError() and hide[hudname] then
 		return false
 	end
 end)
@@ -100,10 +100,10 @@ net.Receive("PHE.rotateState", function() Rstate = net.ReadInt(2) end)
 
 local function PopulateAliveTeam(tm)
 	local tim = team.GetPlayers(tm)
-	local liveply = liveply || 0
+	local liveply = liveply or 0
 
 	for _,pl in pairs(tim) do
-		if IsValid(pl) && pl:Alive() then liveply = liveply + 1 end
+		if IsValid(pl) and pl:Alive() then liveply = liveply + 1 end
 	end
 
 	return liveply
@@ -117,13 +117,13 @@ hook.Add("HUDPaint", "PHE.MainHUD", function()
 	if GetConVar("ph_hud_use_new"):GetBool() then state = true else state = false end;
 
 	-- Don't draw if materials didn't load correctly
-	if matw:IsError () && state then
+	if matw:IsError () and state then
 		state = false
 	end
 
-	if IsValid(LocalPlayer()) && LocalPlayer():Alive() && state && (LocalPlayer():Team() == TEAM_HUNTERS || LocalPlayer():Team() == TEAM_PROPS) then
+	if IsValid(LocalPlayer()) and LocalPlayer():Alive() and state and (LocalPlayer():Team() == TEAM_HUNTERS or LocalPlayer():Team() == TEAM_PROPS) then
 		-- Begin Player Info
-		if !IsValid(ava) then
+		if not IsValid(ava) then
 			ava = vgui.Create("AvatarMask")
 			ava:SetPos(16, pos.y + 18)
 			ava:SetSize(86,86)
@@ -173,7 +173,7 @@ hook.Add("HUDPaint", "PHE.MainHUD", function()
 		surface.DrawTexturedRect( pos.x + 168, pos.y + 74, 32, 32 )
 
 		if LocalPlayer():Team() == TEAM_HUNTERS then
-			surface.SetDrawColor(indic.light[LocalPlayer ():FlashlightIsOn () && 1 || 0])
+			surface.SetDrawColor(indic.light[LocalPlayer ():FlashlightIsOn () and 1 or 0])
 		else
 			surface.SetDrawColor( indic.light[CL_GLOBAL_LIGHT_STATE] )
 		end
@@ -198,7 +198,7 @@ hook.Add("HUDPaint", "PHE.MainHUD", function()
 	end
 
 	-- Weapon HUD
-	if IsValid(LocalPlayer()) && LocalPlayer():Alive() && state && LocalPlayer():Team() == TEAM_HUNTERS then
+	if IsValid(LocalPlayer()) and LocalPlayer():Alive() and state and LocalPlayer():Team() == TEAM_HUNTERS then
 		surface.SetDrawColor( 255, 255, 255, 255 )
 		surface.SetMaterial( matw )
 		surface.DrawTexturedRect( posw.x, posw.y, 480, 120 )
@@ -224,7 +224,7 @@ hook.Add("HUDPaint", "PHE.MainHUD", function()
 			if clip < 0 then clip = 0 end
 			if maxclip < 0 then maxclip = 0 end
 
-			if (clip < 0 || maxclip < 0) then
+			if (clip < 0 or maxclip < 0) then
 				percent = 0
 			else
 				percent = math.Round(clip / maxclip * 300)
@@ -241,21 +241,21 @@ hook.Add("HUDPaint", "PHE.MainHUD", function()
 		end
 	end
 
-	if IsValid(LocalPlayer()) && !LocalPlayer():Alive() && IsValid(ava) then
+	if IsValid(LocalPlayer()) and not LocalPlayer():Alive() and IsValid(ava) then
 		ava:SetVisible(false)
 		ava:Remove()
 	end
-	if IsValid(LocalPlayer()) && !state && IsValid(ava) then
+	if IsValid(LocalPlayer()) and not state and IsValid(ava) then
 		ava:SetVisible(false)
 		ava:Remove()
 	end
-	if IsValid(LocalPlayer()) && (LocalPlayer():Team() == TEAM_SPECTATOR || LocalPlayer():Team() == TEAM_UNASSIGNED) && IsValid(ava) then
+	if IsValid(LocalPlayer()) and (LocalPlayer():Team() == TEAM_SPECTATOR or LocalPlayer():Team() == TEAM_UNASSIGNED) and IsValid(ava) then
 		ava:SetVisible(false)
 		ava:Remove()
 	end
 
 	-- the Team Bar. This requires at least 4 players to get this displayed.
-	if GetConVar("ph_show_team_topbar"):GetBool() && ((player.GetCount() >= 4 && LocalPlayer():Alive()) && (LocalPlayer():Team() != TEAM_UNASSIGNED && LocalPlayer():Team() != TEAM_SPECTATOR)) then
+	if GetConVar("ph_show_team_topbar"):GetBool() and ((player.GetCount() >= 4 and LocalPlayer():Alive()) and (LocalPlayer():Team() ~= TEAM_UNASSIGNED and LocalPlayer():Team() ~= TEAM_SPECTATOR)) then
 		surface.SetDrawColor( 255, 255, 255, 255 )
 		surface.SetMaterial( hudtopbar.mat )
 		surface.DrawTexturedRect( hudtopbar.x, hudtopbar.y, 400, 50 )

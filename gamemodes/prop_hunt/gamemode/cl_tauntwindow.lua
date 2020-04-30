@@ -57,7 +57,7 @@ local function MainFrame()
 	end
 
 	local function frame_Think_Force()
-		if isforcedclose == true && isopened == true then
+		if isforcedclose == true and isopened == true then
 			isopened = false
 			hastaunt = false
 			frame:Close()
@@ -148,7 +148,7 @@ local function MainFrame()
 			list:Clear()
 			hastaunt = false
 			if LocalPlayer():Team() == TEAM_PROPS then
-				if PHE:GetTeamTaunt(TEAM_PROPS,true) != false then
+				if PHE:GetTeamTaunt(TEAM_PROPS,true) ~= false then
 					for name,val in pairs(PHE:GetTeamTaunt(TEAM_PROPS,true)) do
 						list:AddLine(name)
 					end
@@ -156,7 +156,7 @@ local function MainFrame()
 					list:AddLine("<< WARNING: NO TAUNTS DETECTED! >>")
 				end
 			else
-				if PHE:GetTeamTaunt(TEAM_HUNTERS,true) != false then
+				if PHE:GetTeamTaunt(TEAM_HUNTERS,true) ~= false then
 					for name,val in pairs(PHE:GetTeamTaunt(TEAM_HUNTERS,true)) do
 						list:AddLine(name)
 					end
@@ -206,7 +206,7 @@ local function MainFrame()
 	end
 
 	local function SendToServer(snd)
-		if !isplayed then
+		if not isplayed then
 			net.Start("CL2SV_PlayThisTaunt"); net.WriteString(tostring(snd)); net.SendToServer();
 			isplayed = true
 			timer.Simple(GetConVar("ph_customtaunts_delay"):GetInt(), function() isplayed = false; end)
@@ -310,8 +310,8 @@ local function MainFrame()
 end
 
 concommand.Add("ph_showtaunts", function()
-if LocalPlayer():Alive() && isforcedclose != true && LocalPlayer():GetObserverMode() == OBS_MODE_NONE then
-	if isopened != true then
+if LocalPlayer():Alive() and isforcedclose ~= true and LocalPlayer():GetObserverMode() == OBS_MODE_NONE then
+	if isopened ~= true then
 		MainFrame()
 	end
 else
@@ -320,7 +320,7 @@ end
 end, nil, "Show Prop Hunt taunt list, so you can select and play for self or play as a taunt.")
 
 local function BindPress(ply, bind, pressed)
-	if string.find(bind, "+menu_context") && pressed then
+	if string.find(bind, "+menu_context") and pressed then
 		RunConsoleCommand("ph_showtaunts")
 	end
 end

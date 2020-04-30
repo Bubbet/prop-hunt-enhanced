@@ -68,8 +68,8 @@ Keep in note that UniqueName should be unique and different. Otherwise will caus
 ]]
 ENT.funclists = {
 	function(pl)
-		if !pl.ph_fastspeed then
-			if !pl._OriginalWSpeed then pl._OriginalWSpeed = pl:GetWalkSpeed() end
+		if not pl.ph_fastspeed then
+			if not pl._OriginalWSpeed then pl._OriginalWSpeed = pl:GetWalkSpeed() end
 			
 			pl:ChatPrint("[Devil Crystal] You have super speed Power up!")
 			pl:SendLua("surface.PlaySound('prop_idbs/speedup.wav')")
@@ -97,8 +97,8 @@ ENT.funclists = {
 		pl:ChatPrint("[Devil Crystal] You gained armor points bonus : "..tostring(rand).."!")
 	end,
 	function(pl)
-		if !pl.ph_slowspeed then
-			if !pl._OriginalWSpeed then pl._OriginalWSpeed = pl:GetWalkSpeed() end
+		if not pl.ph_slowspeed then
+			if not pl._OriginalWSpeed then pl._OriginalWSpeed = pl:GetWalkSpeed() end
 			
 			pl:ChatPrint("[Devil Crystal] Uh oh, you're slowing down!")
 			pl:SendLua("surface.PlaySound('prop_idbs/slowdown.wav')")
@@ -135,7 +135,7 @@ ENT.funclists = {
 		end
 	end,
 	function(pl)
-		if !pl.ph_cloacking then
+		if not pl.ph_cloacking then
 			pl:ChatPrint("[Devil Crystal] Cloaking...")
 			pl:SendLua("surface.PlaySound('prop_idbs/cloak.wav')")
 			pl.ph_prop:DrawShadow(false)
@@ -156,13 +156,13 @@ ENT.funclists = {
 
 local function ResetEverything()
 	for _,v in pairs(player.GetAll()) do
-		if IsValid(v) && v:Alive() then
+		if IsValid(v) and v:Alive() then
 			v.ph_cloacking		= false
 			v.ph_slowspeed		= false
 			v.ph_fastspeed		= false
 		
-			if v:Team() == TEAM_PROPS && v._OriginalWSpeed then v:SetWalkSpeed(v._OriginalWSpeed) end
-			if v:Team() == TEAM_PROPS && v.ph_prop:GetMaterial() then v.ph_prop:DrawShadow(true) v.ph_prop:SetMaterial("") end
+			if v:Team() == TEAM_PROPS and v._OriginalWSpeed then v:SetWalkSpeed(v._OriginalWSpeed) end
+			if v:Team() == TEAM_PROPS and v.ph_prop:GetMaterial() then v.ph_prop:DrawShadow(true) v.ph_prop:SetMaterial("") end
 			if v:IsFrozen() then v:Freeze(false) end
 		end
 	end
@@ -184,7 +184,7 @@ end
 ENT:AddMoreLuckyEvents()
 
 function ENT:The_DevilDrop(pl)
-	if pl:Team() == TEAM_PROPS && pl:Alive() then
+	if pl:Team() == TEAM_PROPS and pl:Alive() then
 		self.getfunction = table.Random(self.funclists)
 		self.getfunction(pl)
 		
@@ -193,7 +193,7 @@ function ENT:The_DevilDrop(pl)
 end
 
 function ENT:Use(activator)
-	if GAMEMODE:InRound() && IsValid(activator) && activator:IsPlayer() && activator:Alive() && activator:Team() == TEAM_PROPS then
+	if GAMEMODE:InRound() and IsValid(activator) and activator:IsPlayer() and activator:Alive() and activator:Team() == TEAM_PROPS then
 		self:The_DevilDrop(activator)
 		self:ShowEffects(self.Entity, "GlassImpact", self.Entity:GetPos(), self.Entity:GetPos())
 		self.Entity:EmitSound(Sound(table.Random(self.sounds)),60)

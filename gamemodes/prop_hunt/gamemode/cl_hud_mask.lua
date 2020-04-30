@@ -38,13 +38,13 @@ function PANEL:SetPlayer(...)
     self.Avatar:SetPlayer(...)
 end
 
-function PANEL:OnSizeChanged(w, h)
+function PANEL:OnSizeChanged(_, _)
     self.Avatar:SetSize(self:GetWide(), self:GetTall())
     self.points = math.Max(self:GetWide() / 4, 32)
     self.poly = MakeCirclePoly(self:GetWide() / 2, self:GetTall() / 2, self:GetWide() / 2, self.points)
 end
 
-function PANEL:DrawMask(w, h)
+function PANEL:DrawMask(_, _)
     draw.NoTexture();
     surface.SetMaterial(self.material);
     surface.SetDrawColor(color_white);

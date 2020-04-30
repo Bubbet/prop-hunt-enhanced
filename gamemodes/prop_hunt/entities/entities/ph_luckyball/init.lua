@@ -182,7 +182,7 @@ balls.funclists = {
 	 end,
 	 function(pl)  -- This is a fun little reference to staging
 		for _, plph in pairs(player.GetAll()) do
-			if plph:SteamID() == "STEAM_0:0:49332102" && plph:Alive() && plph:Team() == TEAM_HUNTERS then
+			if plph:SteamID() == "STEAM_0:0:49332102" and plph:Alive() and plph:Team() == TEAM_HUNTERS then
 				pl:ChatPrint("[Lucky Ball] You put "..plph:Name().." on the stage.")
 				plph:SendLua("CL_GLIMPCAM = CurTime() + 10")
 				plph:SendLua("RunConsoleCommand(\"act\", \"dance\")")
@@ -226,7 +226,7 @@ balls:AddMoreLuckyEvents()
 
 function balls:The_LuckyDrop(pl)
 	-- For hunter only.
-	if pl:Team() == TEAM_HUNTERS && pl:Alive() then
+	if pl:Team() == TEAM_HUNTERS and pl:Alive() then
 		balls.getfunction = table.Random(balls.funclists)
 		balls.getfunction(pl)
 		
@@ -235,7 +235,7 @@ function balls:The_LuckyDrop(pl)
 end
 
 function ENT:Use(activator)
-	if GAMEMODE:InRound() && activator:IsPlayer() && activator:Alive() && activator:Team() == TEAM_HUNTERS then
+	if GAMEMODE:InRound() and activator:IsPlayer() and activator:Alive() and activator:Team() == TEAM_HUNTERS then
 		if self.Uses == 0 then
 			balls:The_LuckyDrop(activator)
 			

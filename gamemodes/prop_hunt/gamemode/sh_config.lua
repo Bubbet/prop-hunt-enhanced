@@ -332,7 +332,7 @@ concommand.Add("phe_refresh_taunt_list", function() PHE:RefreshTauntList() end, 
 
 -- Add the custom player model bans for props AND prop banned models
 if SERVER then
-	if ( !file.Exists( "phe_config", "DATA" ) ) then
+	if ( not file.Exists( "phe_config", "DATA" ) ) then
 		printVerbose("[PH: Enhanced] Warning: ./data/phe_config/ does not exist. Creating New One...")
 		file.CreateDir( "phe_config" )
 	end
@@ -342,12 +342,12 @@ if SERVER then
 		local dir = "phe_config/prop_plymodel_bans"
 
 		-- Create base config area
-		if ( !file.Exists( dir, "DATA" ) ) then
+		if ( not file.Exists( dir, "DATA" ) ) then
 			file.CreateDir( dir )
 		end
 
 		-- Create actual config
-		if ( !file.Exists( dir .. "/bans.txt", "DATA" ) ) then
+		if ( not file.Exists( dir .. "/bans.txt", "DATA" ) ) then
 			file.Write( dir .. "/bans.txt", util.TableToJSON({"models/player.mdl"}, true) )
 		end
 
@@ -384,11 +384,11 @@ if SERVER then
 			"models/props/cs_militia/reload_bullet_tray.mdl"
 		}
 
-		if ( !file.Exists(dir, "DATA") ) then
+		if ( not file.Exists(dir, "DATA") ) then
 			file.CreateDir(dir)
 		end
 
-		if ( !file.Exists(dir .. "/model_bans.txt","DATA") ) then
+		if ( not file.Exists(dir .. "/model_bans.txt","DATA") ) then
 			file.Write( dir .. "/model_bans.txt", util.TableToJSON( mdlpermabans, true ))
 		end
 

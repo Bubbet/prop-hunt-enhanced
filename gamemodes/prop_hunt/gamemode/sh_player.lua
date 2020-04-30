@@ -1,8 +1,8 @@
 -- Finds the player Player/Entities table
 local Player = FindMetaTable("Player")
 local Entity = FindMetaTable("Entity")
-if !Player then return end
-if !Entity then return end
+if not Player then return end
+if not Entity then return end
 
 AccessorFunc(Player, "RecentlyLocked", "RecentlyLocked", FORCE_BOOL)
 
@@ -51,7 +51,7 @@ end
 
 -- Blinds the player by setting view out into the void
 function Player:Blind(bool)
-	if !self:IsValid() then return end
+	if not self:IsValid() then return end
 
 	if SERVER then
 		net.Start("SetBlind")
@@ -80,9 +80,9 @@ end
 
 -- Removes the prop given to the player
 function Player:RemoveProp()
-	if CLIENT || !self:IsValid() then return end
+	if CLIENT or not self:IsValid() then return end
 
-	if self.ph_prop && self.ph_prop:IsValid() then
+	if self.ph_prop and self.ph_prop:IsValid() then
 		self.ph_prop:Remove()
 		self.ph_prop = nil
 	end
@@ -103,16 +103,16 @@ end
 if SERVER then
 	function Player:IsHoldingEntity()
 
-		if !self.LastPickupEnt then
+		if not self.LastPickupEnt then
 			return false
 		end
-		if !IsValid(self.LastPickupEnt) then
+		if not IsValid(self.LastPickupEnt) then
 			return false
 		end
 
 		local ent = self.LastPickupEnt
 
-		if ent.LastPickupPly != self then
+		if ent.LastPickupPly ~= self then
 			return false
 		end
 

@@ -43,16 +43,16 @@ end
 function ENT:Think()
 	if CLIENT then
 		local pl = self:GetOwner()
-		if IsValid(pl) && pl:Alive() && pl == LocalPlayer() then
+		if IsValid(pl) and pl:Alive() and pl == LocalPlayer() then
 			local me  = LocalPlayer()
 			local pos = me:GetPos()
 			local ang = me:GetAngles()
 			local lockstate = pl:GetPlayerLockedRot()
 
-			if self:GetModel() == "models/player/kleiner.mdl" || self:GetModel() == player_manager.TranslatePlayerModel(GetConVar("cl_playermodel"):GetString()) then
+			if self:GetModel() == "models/player/kleiner.mdl" or self:GetModel() == player_manager.TranslatePlayerModel(GetConVar("cl_playermodel"):GetString()) then
 				self:SetPos(pos)
 			end
-			if !lockstate then
+			if not lockstate then
 				self:SetPos(pos - Vector(0, 0, self:OBBMins().z))
 				self:SetAngles(Angle(0,ang.y,0))
 			else
@@ -89,7 +89,7 @@ if SERVER then
 		local inflictor = dmg:GetInflictor()
 
 		-- Health
-		if GAMEMODE:InRound() && IsValid(pl) && pl:Alive() && pl:IsPlayer() && attacker:IsPlayer() && dmg:GetDamage() > 0 then
+		if GAMEMODE:InRound() and IsValid(pl) and pl:Alive() and pl:IsPlayer() and attacker:IsPlayer() and dmg:GetDamage() > 0 then
 			if pl:Armor() >= 10 then
 				self.health = self.health - (math.Round(dmg:GetDamage()/2))
 				pl:SetArmor(pl:Armor() - 20)
@@ -102,9 +102,9 @@ if SERVER then
 				pl:KillSilent()
 				pl:SetArmor(0)
 				
-				if inflictor && inflictor == attacker && inflictor:IsPlayer() then
+				if inflictor and inflictor == attacker and inflictor:IsPlayer() then
 					inflictor = inflictor:GetActiveWeapon()
-					if !inflictor || inflictor == NULL then inflictor = attacker end
+					if not inflictor or inflictor == NULL then inflictor = attacker end
 				end
 				
 				net.Start( "PlayerKilledByPlayer" )
@@ -123,7 +123,7 @@ if SERVER then
 						pl:PrintMessage(HUD_PRINTCONSOLE, "!! WARNING: Something went wrong with the Freeze Camera, but it's still enabled!")
 					else
 						timer.Simple(0.5, function()
-							if !pl:GetNWBool("InFreezeCam", false) then
+							if not pl:GetNWBool("InFreezeCam", false) then
 								-- Play the good old Freeze Cam sound
 								net.Start("PlayFreezeCamSound")
 								net.Send(pl)

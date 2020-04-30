@@ -4,7 +4,7 @@ local function LoadOBBConfig()
 	local map = game.GetMap()
 	local GetData = "phe-config/obb/" .. map .. ".txt"
 
-	if !file.Exists(GetData, "DATA") then
+	if not file.Exists(GetData, "DATA") then
 		printVerbose("[PH: Enhanced] No OBB Configuration found for map: " .. map)
 		return false
 	end
@@ -19,7 +19,7 @@ end
 
 local function DoConfig()
 	local data = CUR_MAP_DATA
-	if !data then return end
+	if not data then return end
 
 	--[[
 	JSON structure:
@@ -70,7 +70,7 @@ end
 
 hook.Add("Initialize", "PHE.InitOBBModelData", function()
 
-	if !file.Exists("phe-config/obb","DATA") then
+	if not file.Exists("phe-config/obb","DATA") then
 		file.CreateDir("phe-config/obb")
 	end
 

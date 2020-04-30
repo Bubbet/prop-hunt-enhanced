@@ -73,7 +73,7 @@ net.Receive("ForceHunterAsProp", function(len, ply)
 		local hunter = Player(net.ReadUInt(16))
 		local hunterName = hunter:GetName()
 
-		if !hunter:GetVar("ForceAsProp", false) then
+		if not hunter:GetVar("ForceAsProp", false) then
 			hunter:SetVar("ForceAsProp", true)
 
 			for _, plyr in ipairs(player.GetAll()) do

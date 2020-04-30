@@ -11,7 +11,7 @@ end
 PHE.LANG = table.Copy(PHE.LANGUAGES["en"])
 
 -- Load selected language
-local LANG = PHE.LANGUAGES[GetConVar("ph_language"):GetString()] || {}
+local LANG = PHE.LANGUAGES[GetConVar("ph_language"):GetString()] or {}
 
 -- Override language
 table.Merge(PHE.LANG, LANG)

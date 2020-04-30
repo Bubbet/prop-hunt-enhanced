@@ -29,11 +29,11 @@ local function outElastic(t, b, c, d, a, p)
 
 	if t == 1 then return b + c end
 
-	if !p then p = d * 0.3 end
+	if not p then p = d * 0.3 end
 
 	local s
 
-	if !a || a < math.abs(c) then
+	if not a or a < math.abs(c) then
 		a = c
 		s = p / 4
 	else
@@ -44,7 +44,7 @@ local function outElastic(t, b, c, d, a, p)
 end
 
 local function AutoTauntPaint()
-	if !isEnabled || !isProp || !started then return; end
+	if not isEnabled or not isProp or not started then return; end
 
 	if tweenTime < 1 then
 		x = outElastic(tweenTime, xStart, xEnd - xStart, 1, 1, 0.5)
@@ -76,7 +76,7 @@ local function CheckAutoTaunt()
 	local ply = LocalPlayer()
 
 	-- Stop everything under these conditions
-	if !ply:Alive() || ply:Team() != TEAM_PROPS then
+	if not ply:Alive() or ply:Team() ~= TEAM_PROPS then
 		started = false
 		RemoveTimer()
 		printVerbose("[PH:E AutoTaunt] Blocked!")
@@ -93,7 +93,7 @@ local function Setup()
 	previousTime = CurTime()
 	tweenTime = 0
 
-	if isEnabled && isProp then
+	if isEnabled and isProp then
 		delay = GetConVar("ph_autotaunt_delay"):GetInt()
 		timer.Create(timerID, 1, 0, CheckAutoTaunt)
 	end
@@ -102,7 +102,7 @@ end
 local function CheckPlayer()
 	local ply = LocalPlayer()
 
-	if ply:Alive() && ply:Team() == TEAM_PROPS then
+	if ply:Alive() and ply:Team() == TEAM_PROPS then
 		if timer.Exists(teamCheckTimer) then
 			timer.Remove(teamCheckTimer)
 		end
@@ -119,7 +119,7 @@ local function AutoTauntSpawn()
 	xEnd = ScrW() - 195
 	y = ScrH() - 65
 
-	if !CheckPlayer() then
+	if not CheckPlayer() then
 		timer.Create(teamCheckTimer, 0.1, 10, CheckPlayer)
 	end
 end

@@ -3,15 +3,15 @@ function GM:HUDDrawTargetID()
 	local trace = util.TraceLine(tr)
 
 	-- Don't show if 'Player Names above their head' is enabled.
-	if GetConVar("ph_enable_plnames"):GetBool() && GetConVar("ph_cl_pltext"):GetBool() then return end
+	if GetConVar("ph_enable_plnames"):GetBool() and GetConVar("ph_cl_pltext"):GetBool() then return end
 
-	if (!trace.Hit) then return end
-	if (!trace.HitNonWorld) then return end
+	if (not trace.Hit) then return end
+	if (not trace.HitNonWorld) then return end
 
 	local text = "ERROR"
 	local font = "TargetID"
 
-	if (trace.Entity:IsPlayer() && trace.Entity:Team() == LocalPlayer():Team()) then
+	if (trace.Entity:IsPlayer() and trace.Entity:Team() == LocalPlayer():Team()) then
 		text = trace.Entity:Nick()
 	else
 		return
@@ -21,7 +21,7 @@ function GM:HUDDrawTargetID()
 	local w, h = surface.GetTextSize(text)
 	local MouseX, MouseY = gui.MousePos()
 
-	if (MouseX == 0 && MouseY == 0) then
+	if (MouseX == 0 and MouseY == 0) then
 		MouseX = ScrW() / 2
 		MouseY = ScrH() / 2
 	end
