@@ -106,8 +106,36 @@ function GM:CreateTeams()
 
 end
 
+function collision_check(entA, entB)
+	local validA = IsValid(entA)
+	local validB = IsValid(entB)
+	if validA and validB then
+		local isplyA = entA:IsPlayer()
+		local isplyB = entB:IsPlayer()
+		local teamA, teamB
+		if isplyA then teamA = entA:Team() end
+		if isplyB then teamB = entB:Team() end
+		local classA = entA:GetClass()
+		local classB = entB:GetClass()
+		local modelA = entA:GetModel()
+		local modelB = entB:GetModel()
+		local succ, plyholdA = pcall(function() return entA:IsPlayerHolding() end)
+		plyholdA = succ and plyholdA
+		local succ, plyholdB = pcall(function() return entB:IsPlayerHolding() end)
+		plyholdB = succ and plyholdB
+		if isplyA and isplyB then return false end -- no collisions between players
+		if teamA == TEAM_PROPS and classB == "ph_prop" and (modelB == "models/player/kleiner.mdl" or modelB == player_manager.TranslatePlayerModel(entB:GetOwner():GetInfo("cl_playermodel"))) then return false end -- No collision between other player props at round start
+		if teamA == TEAM_PROPS and plyholdB then return false end -- prevent player held props from colliding with props
+	end
+end
+
 -- Check collisions
 function CheckPropCollision(entA, entB)
+	local check1 = collision_check(entA, entB)
+	local check2 = collision_check(entB, entA)
+	if check1 ~= nil then return check1 end
+	if check2 ~= nil then return check2 end
+	--[[
 	local validA = IsValid(entA)
 	local validB = IsValid(entB)
 	-- Disable prop on prop collisions
@@ -134,8 +162,8 @@ function CheckPropCollision(entA, entB)
 		return false
 	end
 
-	if  (validA and entA:GetOwner():IsPlayer() and entA:GetOwner():Team() == TEAM_PROPS and (entA:GetModel() == "models/player/kleiner.mdl" or entA:GetModel() == player_manager.TranslatePlayerModel(entA:GetOwner():GetInfo("cl_playermodel")))) and
-		(validB and entB:GetOwner():IsPlayer() and entB:GetOwner():Team() == TEAM_PROPS and (entB:GetModel() == "models/player/kleiner.mdl" or entB:GetModel() == player_manager.TranslatePlayerModel(entB:GetOwner():GetInfo("cl_playermodel")))) then
+	if  (validA and (entA:GetOwner():Team() == TEAM_PROPS or entA:IsPlayer()) and (entA:GetModel() == "models/player/kleiner.mdl" or entA:GetModel() == player_manager.TranslatePlayerModel(entA:GetOwner():GetInfo("cl_playermodel")))) and
+		(validB and (entB:GetOwner():Team() == TEAM_PROPS or entB:IsPlayer()) and (entB:GetModel() == "models/player/kleiner.mdl" or entB:GetModel() == player_manager.TranslatePlayerModel(entB:GetOwner():GetInfo("cl_playermodel")))) then
 		return false
 	end
 
@@ -143,6 +171,7 @@ function CheckPropCollision(entA, entB)
 	if (validA and validB and (entA:IsPlayer() and entA:Team() == TEAM_HUNTERS and entB:IsPlayer() and entB:Team() == TEAM_HUNTERS)) then
 		return false
 	end
+	]]
 end
 hook.Add("ShouldCollide", "CheckPropCollision", CheckPropCollision)
 

@@ -25,7 +25,7 @@ end
 function RTV.Start()
 	PrintMessage( HUD_PRINTTALK, "The vote has been rocked, map vote imminent")
 	timer.Simple(4, function()
-		MapVote.Start(nil, nil, nil, nil)
+		GAMEMODE:EndOfGame(true)
 	end)
 end
 

@@ -297,6 +297,7 @@ function PHEDrawPropselectHalos()
 
 		-- Something to tell if the prop is selectable
 	if GetConVar("ph_cl_halos"):GetBool() and LocalPlayer():Team() == TEAM_PROPS then
+		local ph_props = ents.FindByClass("ph_prop")
 		if LocalPlayer():Alive() then
 			local trace = {}
 			-- fix for smaller prop size. They should stay horizontal rather than looking straight down.
@@ -310,7 +311,7 @@ function PHEDrawPropselectHalos()
 				trace.start = LocalPlayer():EyePos() + Vector(0, 0, 8)
 				trace.endpos = LocalPlayer():EyePos() + Vector(0, 0, 8) + LocalPlayer():EyeAngles():Forward() * 100
 			end
-			trace.filter = ents.FindByClass("ph_prop")
+			trace.filter = ph_props
 
 			local trace2 = util.TraceLine(trace)
 			if trace2.Entity and trace2.Entity:IsValid() and table.HasValue(PHE.USABLE_PROP_ENTITIES, trace2.Entity:GetClass()) then
@@ -319,7 +320,7 @@ function PHEDrawPropselectHalos()
 				halo.Add(ent_table, Color(20, 250, 0), 1.2, 1.2, 1, true, true)
 			end
 		end
-		halo.Add(ents.FindByClass("ph_prop"), Color(0, 20, 250), 1.2, 1.2, 1, true, GetConVar("ph_prop_halo_through_walls"):GetBool())
+		halo.Add(ph_props, Color(0, 20, 250), 1.2, 1.2, 1, true, GetConVar("ph_prop_halo_through_walls"):GetBool())
 	end
 end
 hook.Add("PreDrawHalos", "PHEDrawPropselectHalos", PHEDrawPropselectHalos)
