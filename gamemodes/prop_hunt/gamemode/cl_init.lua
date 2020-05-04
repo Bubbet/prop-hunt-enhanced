@@ -149,7 +149,10 @@ function HUDPaint()
 			if pl ~= LocalPlayer() and (pl and pl:IsValid() and pl:Alive() and pl:Team() == LocalPlayer():Team()) then
 				local addvector = Vector(0, 0, math.Clamp(pl:EyePos():Distance(LocalPlayer():EyePos()) * 0.04, 16, 64))
 				-- todo: text will disappear in a specified distance.
-				draw.DrawText(pl:Name() .. " (" .. pl:Health() .. "%)", "TargetIDSmall", (pl:GetNWEntity("PlayerPropEntity"):GetPos() + addvector):ToScreen().x, (pl:GetNWEntity("PlayerPropEntity"):GetPos() + addvector):ToScreen().y, team.GetColor(pl:Team()), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				local ent = pl:GetNWEntity("PlayerPropEntity")
+				if ent then
+					draw.DrawText(pl:Name() .. " (" .. pl:Health() .. "%)", "TargetIDSmall", (ent:GetPos() + addvector):ToScreen().x, (ent:GetPos() + addvector):ToScreen().y, team.GetColor(pl:Team()), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				end
 			end
 		end
 	end
