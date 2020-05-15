@@ -73,13 +73,13 @@ if SERVER then
 	end
 
 	function ENT:Use(activator, caller, usetype, value)
-		if activator:Team() == TEAM_HUNTERS then
+		--if activator:Team() == TEAM_HUNTERS then
 			if not self:IsPlayerHolding() then
 				activator:PickupObject(self)
 			else
 				activator:DropObject()
 			end
-		end
+		--end
 	end
 	
 	-- Main Function

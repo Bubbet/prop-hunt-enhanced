@@ -133,6 +133,7 @@ function collision_check(entA, entB)
 		if teamA == TEAM_PROPS and classB == "ph_prop" and (modelB == "models/player/kleiner.mdl" or modelB == player_manager.TranslatePlayerModel(entB:GetOwner():GetInfo("cl_playermodel"))) then return false end -- No collision between other player props at round start
 		if teamA == TEAM_PROPS and plyholdB then return false end -- prevent player held props from colliding with props
 		if teamA == TEAM_PROPS and entA:GetPlayerLockedRot() and propA and not (propA:GetModel() == "models/player/kleiner.mdl" or propA:GetModel() == player_manager.TranslatePlayerModel(entA:GetInfo("cl_playermodel"))) then return false end
+		if teamA == TEAM_PROPS and (classB == "prop_physics" or classB == "prop_physics_multiplayer" or classB == "ph_prop") then return false end -- Fix server crash when swapping lock
 	end
 end
 
