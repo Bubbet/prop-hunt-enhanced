@@ -131,37 +131,10 @@ function collision_check(entA, entB)
 		plyholdB = succ and plyholdB
 		if isplyA and isplyB then return false end -- no collisions between players
 		if teamA == TEAM_PROPS and classB == "ph_prop" and (modelB == "models/player/kleiner.mdl" or modelB == player_manager.TranslatePlayerModel(entB:GetOwner():GetInfo("cl_playermodel"))) then return false end -- No collision between other player props at round start
-		if teamA == TEAM_PROPS and plyholdB then return false end -- prevent player held props from colliding with props
-		if teamA == TEAM_PROPS and entA:GetPlayerLockedRot() and propA and not (propA:GetModel() == "models/player/kleiner.mdl" or propA:GetModel() == player_manager.TranslatePlayerModel(entA:GetInfo("cl_playermodel"))) then return false end
+		if teamA == TEAM_PROPS and (plyholdB or entB.LastPickupPly and entB.LastPickupPly:Team() == TEAM_HUNTERS) then return false end -- prevent player held props from colliding with props
+		--if teamA == TEAM_PROPS and entA:GetPlayerLockedRot() and propA and not (propA:GetModel() == "models/player/kleiner.mdl" or propA:GetModel() == player_manager.TranslatePlayerModel(entA:GetInfo("cl_playermodel"))) then return false end
 		--if teamA == TEAM_PROPS and (classB == "prop_physics" or classB == "prop_physics_multiplayer" or classB == "ph_prop") then return false end -- Fix server crash when swapping lock
 		--if teamA == TEAM_PROPS and entA:GetRecentlyLocked() then return false end
-		entA.nearProps = entA.nearProps or {}
-		if teamA == TEAM_PROPS and (classB == "prop_physics" or classB == "prop_physics_multiplayer" or classB == "ph_prop") then
-			--[[
-			local pos = entA:GetPos()
-			local bot, top = entA:GetHull()
-			local tracetable = {
-				start = pos,
-				endpos = pos,
-				mins = bot,
-				maxs = top
-			}
-			local trace = util.TraceHull(tracetable)
-			if trace.Hit then
-				print(entA, 'colliding with', entB)
-				return false
-			end
-
-			local trace = { start = entA:GetPos(), endpos = entA:GetPos(), filter = entA }
-			local tr = util.TraceEntity( trace, entA )
-			if ( tr.Hit ) then
-				-- Do stuff
-				return false
-			end
-			]]
-			if not entA:GetPlayerLockedRot() and not table.HasValue(entA.nearProps, entB) then table.insert(entA.nearProps, entB) end
-		end
-		if table.HasValue(entA.nearProps, entB) then return false end
 	end
 end
 

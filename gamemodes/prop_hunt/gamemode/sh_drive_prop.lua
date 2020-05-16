@@ -4,14 +4,6 @@ hook.Add("Move", "moveProp", function(ply,move)
 		local ent = ply.ph_prop
 		-- Set position and angles
 		if IsValid(ent) and IsValid(ply) and ply:Alive() then
-			if ply.nearProps then
-				for k,v in pairs(ply.nearProps) do
-					if ply:GetPos():DistToSqr(v:GetPos()) > (v:OBBMaxs():LengthSqr()*2 + 50) then
-						table.remove(ply.nearProps, k)
-					end
-				end
-			end
-
 			-- Set position
 			if (ent:GetModel() == "models/player/kleiner.mdl" or ent:GetModel() == player_manager.TranslatePlayerModel(ply:GetInfo("cl_playermodel"))) then
 				ent:SetPos(move:GetOrigin())
