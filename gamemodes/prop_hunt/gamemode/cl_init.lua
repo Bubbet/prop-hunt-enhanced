@@ -146,12 +146,14 @@ function HUDPaint()
 	-- Draw player texts
 	if GetConVar("ph_enable_plnames"):GetBool() and GetConVar("ph_cl_pltext"):GetBool() and LocalPlayer():Team() ~= TEAM_SPECTATOR then
 		for _, pl in pairs(player.GetAll()) do
+			local ent = pl:GetNWEntity("PlayerPropEntity")
 			if pl ~= LocalPlayer() and (pl and pl:IsValid() and pl:Alive() and pl:Team() == LocalPlayer():Team()) then
 				local addvector = Vector(0, 0, math.Clamp(pl:EyePos():Distance(LocalPlayer():EyePos()) * 0.04, 16, 64))
 				-- todo: text will disappear in a specified distance.
-				local succ, ent = pcall(function(a) return a:GetNWEntity("PlayerPropEntity") end, pl)
-				if ent and pl and pl:IsValid() then
+				if pl:Team() == TEAM_PROPS and ent:IsValid() then
 					draw.DrawText(pl:Name() .. " (" .. pl:Health() .. "%)", "TargetIDSmall", (ent:GetPos() + addvector):ToScreen().x, (ent:GetPos() + addvector):ToScreen().y, team.GetColor(pl:Team()), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+				else
+					draw.DrawText(pl:Name() .. " (" .. pl:Health() .. "%)", "TargetIDSmall", (pl:GetPos() + addvector):ToScreen().x, (pl:GetPos() + addvector):ToScreen().y, team.GetColor(pl:Team()), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 				end
 			end
 		end
