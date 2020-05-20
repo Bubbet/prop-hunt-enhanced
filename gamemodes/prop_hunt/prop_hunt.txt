@@ -18,7 +18,7 @@
             "9" "ph_indieoffice"
             "10" "ph_prohunt"
             "11" "ph_youturd"
-            "12" "ph_resortmadness"
+            "12" "ph_the_shop"
             "13" "ph_chalet"
             "14" "ph_nannerstreet"
             "15" "ph_abandonedpost"
@@ -51,7 +51,6 @@
             "42" "ph_town"
             "43" "ph_vg_school"
             "44" "ph_tunel_v2"
-            "45" "ph_the_shop"
         }
         "selectable"            "1"
 
