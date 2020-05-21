@@ -12,7 +12,7 @@
             "3" "ph_terraces"
             "4" "ph_rustyshack"
             "5" "ph_villa"
-            "6" "ph_theater"
+            "6" "ph_vg_school"
             "7" "ph_secretlab"
             "8" "ph_skyscraper"
             "9" "ph_indieoffice"
@@ -49,8 +49,6 @@
             "40" "ph_waste"
             "41" "ph_tunel_v2"
             "42" "ph_town"
-            "43" "ph_vg_school"
-            "44" "ph_tunel_v2"
         }
         "selectable"            "1"
 
